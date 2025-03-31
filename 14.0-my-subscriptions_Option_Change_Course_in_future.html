@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subscriptions | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+            --success: #2e7d32;
+            --warning: #f57c00;
+            --info: #0288d1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 800px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .subscription-summary {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .subscription-icon {
+            font-size: 30px;
+            color: var(--primary);
+            padding: 10px;
+            background-color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .subscription-details {
+            flex: 1;
+        }
+        
+        .subscription-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .subscription-status {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #e8f5e9;
+            color: var(--success);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .subscription-info {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: var(--info);
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0277bd;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .course-access-list {
+            margin-top: 20px;
+        }
+        
+        .course-item {
+            display: flex;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .course-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+            margin-right: 15px;
+        }
+        
+        .future-icon {
+            background-color: #e1f5fe;
+            color: var(--info);
+        }
+        
+        .course-details {
+            flex: 1;
+        }
+        
+        .course-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .course-description {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .course-status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+        
+        .status-future {
+            background-color: #e1f5fe;
+            color: var(--info);
+        }
+        
+        .course-actions {
+            margin-left: 10px;
+        }
+        
+        .course-action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 2px;
+            transition: color 0.2s;
+        }
+        
+        .course-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        .billing-history {
+            margin-top: 30px;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .history-table th {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .history-table tr:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .receipt-link {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .receipt-link:hover {
+            text-decoration: underline;
+        }
+        
+        .payment-label {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .payment-success {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+        
+        .special-offer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff8e1;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .offer-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--warning);
+        }
+        
+        .future-changes {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e1f5fe;
+            border-radius: 8px;
+            border-left: 4px solid var(--info);
+        }
+        
+        .changes-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--info);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .course-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        
+        .course-option {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .course-option:last-child {
+            border-bottom: none;
+        }
+        
+        .course-option:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .course-option.selected {
+            background-color: var(--primary-light);
+        }
+        
+        .course-option-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .course-option-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .date-reminder {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .date-reminder strong {
+            color: var(--text);
+        }
+        
+        .info-notice {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Badge for changes pending */
+        .changes-pending {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #e1f5fe;
+            color: var(--info);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        /* Action menu dropdown */
+        .dropdown-menu {
+            position: absolute;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            min-width: 180px;
+            display: none;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: 5px 0;
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-top: auto;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        /* Notification toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border-left: 4px solid var(--success);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            z-index: 1000;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        .toast-success {
+            border-left-color: var(--success);
+        }
+        
+        .toast-info {
+            border-left-color: var(--info);
+        }
+        
+        .toast-warning {
+            border-left-color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#" class="active">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Account Settings</h2>
+                <ul>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Billing</a></li>
+                    <li><a href="#" class="active">Subscription</a></li>
+                    <li><a href="#">Change Password</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>My Subscriptions</h1>
+                
+                <div class="subscription-summary">
+                    <div class="subscription-icon">📚</div>
+                    <div class="subscription-details">
+                        <div class="subscription-title">Blue Tier - 2 <span class="changes-pending" id="changes-pending-badge">Changes Pending</span></div>
+                        <div class="subscription-status">Active</div>
+                        
+                        <div class="subscription-info">
+                            <div class="info-label">Monthly Price</div>
+                            <div class="info-value">$75.00</div>
+                        </div>
+                        
+                        <div class="subscription-info">
+                            <div class="info-label">Next Billing Date</div>
+                            <div class="info-value">April 15, 2025</div>
+                        </div>
+                        
+                        <div class="subscription-info">
+                            <div class="info-label">Current Period</div>
+                            <div class="info-value">March 15, 2025 - April 14, 2025</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="#" class="btn btn-primary">Switch Plan</a>
+                            <a href="#" class="btn btn-outline">Cancel Membership</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">Current Course Access</div>
+                <p>Your membership gives you access to up to 2 courses at a time. Here are your current active courses:</p>
+                
+                <div class="course-access-list" id="current-courses">
+                    <div class="course-item" data-code="BSC2010" data-name="Biology I">
+                        <div class="course-icon">BSC</div>
+                        <div class="course-details">
+                            <div class="course-name">BSC2010 - Biology I</div>
+                            <div class="course-description">Access to complete study materials including notes, practice exams, and tutorial videos.</div>
+                        </div>
+                        <div class="course-status-badge status-active">Active</div>
+                        <div class="course-actions">
+                            <button class="course-action-btn" onclick="toggleActionMenu(event, 'BSC2010')">⋮</button>
+                            <div class="dropdown-menu" id="dropdown-BSC2010">
+                                <div class="dropdown-item" onclick="scheduleReplacement('BSC2010', 'Biology I')">Replace at Renewal</div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item" onclick="viewCourseDetails('BSC2010')">View Details</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="course-item" data-code="ECO2013" data-name="Macroeconomics">
+                        <div class="course-icon">ECO</div>
+                        <div class="course-details">
+                            <div class="course-name">ECO2013 - Macroeconomics</div>
+                            <div class="course-description">Access to complete study materials including notes, practice exams, and tutorial videos.</div>
+                        </div>
+                        <div class="course-status-badge status-active">Active</div>
+                        <div class="course-actions">
+                            <button class="course-action-btn" onclick="toggleActionMenu(event, 'ECO2013')">⋮</button>
+                            <div class="dropdown-menu" id="dropdown-ECO2013">
+                                <div class="dropdown-item" onclick="scheduleReplacement('ECO2013', 'Macroeconomics')">Replace at Renewal</div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item" onclick="viewCourseDetails('ECO2013')">View Details</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="future-changes" id="future-changes-section">
+                    <div class="changes-title">
+                        <span>Scheduled Course Changes</span>
+                        <button class="btn btn-secondary" onclick="openAddFutureCourseModal()">Modify</button>
+                    </div>
+                    <p>You have scheduled course changes that will take effect on your next billing date (April 15, 2025):</p>
+                    
+                    <div class="course-access-list" id="future-courses">
+                        <div class="course-item" data-code="BSC2011" data-name="Biology II" data-replaces="BSC2010">
+                            <div class="course-icon future-icon">BSC</div>
+                            <div class="course-details">
+                                <div class="course-name">BSC2011 - Biology II</div>
+                                <div class="course-description">This course will replace BSC2010 - Biology I on your next billing date.</div>
+                            </div>
+                            <div class="course-status-badge status-future">Scheduled</div>
+                            <div class="course-actions">
+                                <button class="course-action-btn" onclick="cancelFutureCourse('BSC2011')">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-notice">
+                        Note: Your current courses will remain accessible until your next billing date. You can modify your scheduled changes anytime before then.
+                    </div>
+                </div>
+                
+                <div class="section-title">Billing History</div>
+                <p>Recent subscription payments for your account:</p>
+                
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mar 15, 2025</td>
+                            <td>$75.00</td>
+                            <td><span class="payment-label payment-success">Paid</span></td>
+                            <td><a href="#" class="receipt-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 15, 2025</td>
+                            <td>$75.00</td>
+                            <td><span class="payment-label payment-success">Paid</span></td>
+                            <td><a href="#" class="receipt-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 15, 2025</td>
+                            <td>$75.00</td>
+                            <td><span class="payment-label payment-success">Paid</span></td>
+                            <td><a href="#" class="receipt-link">View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="special-offer">
+                    <div class="offer-title">Special Offer</div>
+                    <p>Upgrade to Platinum Tier for only $25 more per month and get access to an additional course!</p>
+                    <div class="action-buttons" style="margin-top: 10px;">
+                        <a href="#" class="btn btn-primary">Upgrade Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Template for empty future changes section -->
+    <div id="empty-future-changes-template" style="display: none;">
+        <div class="changes-title">
+            <span>Scheduled Course Changes</span>
+            <button class="btn btn-secondary" onclick="openAddFutureCourseModal()">Add Course</button>
+        </div>
+        <p>You have not scheduled any course changes for your next billing cycle yet. You can schedule course changes that will take effect on your next billing date (April 15, 2025).</p>
+    </div>
+    
+    <!-- Modal for course options -->
+    <div id="changeCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Course Options</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>What would you like to do with <strong id="selectedCourse">BSC2010 - Biology I</strong>?</p>
+                <div class="action-buttons" style="margin-top: 20px; justify-content: center;">
+                    <button class="btn btn-outline" onclick="scheduleReplacementFromModal()" style="width: 45%;">Replace at Renewal</button>
+                    <button class="btn btn-outline" onclick="viewCurrentCourseDetails()" style="width: 45%;">View Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding future course -->
+    <div id="addFutureCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Select Future Course</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Choose a course to add on your next billing date (April 15, 2025):</p>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" id="add-course-search" placeholder="Search courses..." onkeyup="filterCourses(this)">
+                </div>
+                
+                <div class="filter-options">
+                    <select class="filter-select" id="add-course-department" onchange="filterCoursesByDepartment()">
+                        <option value="all">All Departments</option>
+                        <option value="APK">APK - Applied Physiology</option>
+                        <option value="BSC">BSC - Biological Sciences</option>
+                        <option value="BUL">BUL - Business Law</option>
+                        <option value="ECO">ECO - Economics</option>
+                        <option value="MCB">MCB - Microbiology</option>
+                        <option value="PSY">PSY - Psychology</option>
+                        <option value="STA">STA - Statistics</option>
+                    </select>
+                    
+                    <select class="filter-select" id="add-course-term" onchange="filterCoursesByTerm()">
+                        <option value="all">All Terms</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer A">Summer A</option>
+                        <option value="Summer B">Summer B</option>
+                        <option value="Summer C">Summer C</option>
+                        <option value="Fall">Fall</option>
+                    </select>
+                </div>
+                
+                <div class="course-list" id="add-course-list">
+                    <!-- Course options will be populated dynamically -->
+                </div>
+                
+                <div class="date-reminder">
+                    <strong>Note:</strong> This change will take effect on your next billing date (April 15, 2025). 
+                    You will continue to have access to your current courses until then.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addFutureCourse()">Schedule Change</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for replacing course -->
+    <div id="replaceCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Replace Course</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Select a new course to replace <strong id="courseToReplace">BSC2010 - Biology I</strong> on your next billing date (April 15, 2025):</p>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" id="replace-course-search" placeholder="Search courses..." onkeyup="filterReplaceCoursesSearch(this)">
+                </div>
+                
+                <div class="filter-options">
+                    <select class="filter-select" id="add-course-department" onchange="filterCoursesByDepartment()">
+                        <option value="all">All Departments</option>
+                        <option value="APK">APK - Applied Physiology</option>
+                        <option value="BSC">BSC - Biological Sciences</option>
+                        <option value="BUL">BUL - Business Law</option>
+                        <option value="ECO">ECO - Economics</option>
+                        <option value="MCB">MCB - Microbiology</option>
+                        <option value="PSY">PSY - Psychology</option>
+                        <option value="STA">STA - Statistics</option>
+                    </select>
+                    
+                    <select class="filter-select" id="add-course-term" onchange="filterCoursesByTerm()">
+                        <option value="all">All Terms</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer A">Summer A</option>
+                        <option value="Summer B">Summer B</option>
+                        <option value="Summer C">Summer C</option>
+                        <option value="Fall">Fall</option>
+                    </select>
+                </div>
+                
+                <div class="course-list" id="replace-course-list">
+                    <!-- Course options will be populated dynamically -->
+                </div>
+                
+                <div class="date-reminder">
+                    <strong>Note:</strong> This change will take effect on your next billing date (April 15, 2025). 
+                    You will continue to have access to your current courses until then.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="scheduleCourseReplacement()">Schedule Replacement</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Scheduled</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; margin: 20px 0;">
+                    <span style="font-size: 40px; color: var(--success);">✓</span>
+                </p>
+                <p style="text-align: center; font-weight: 500; margin-bottom: 20px;">Your course change has been scheduled!</p>
+                <p>Your new course selection will take effect on <strong>April 15, 2025</strong>. Until then, you'll continue to have access to your current courses.</p>
+                <p style="margin-top: 15px;">You can modify or cancel this change anytime before your next billing date.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast notification -->
+    <div class="toast" id="toast-notification">
+        Changes saved successfully!
+    </div>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        // Course data
+        const allCourses = [
+            { code: 'APK2100', name: 'Anatomy', term: 'Summer A', sections: 'Web Sections', description: 'Comprehensive materials covering human anatomy, organ systems, and physiological functions.' },
+            { code: 'APK2100-L', name: 'Anatomy', term: 'Summer A', sections: 'Live Sections', description: 'Live lecture recordings and materials for human anatomy course.' },
+            { code: 'APK2105', name: 'Physiology', term: 'Summer B', sections: 'Web Sections', description: 'Study materials covering human physiology and bodily systems.' },
+            { code: 'APK2105-L', name: 'Physiology', term: 'Summer B', sections: 'Live Sections', description: 'Live lecture materials for human physiology course.' },
+            { code: 'BSC2010', name: 'Biology I', term: 'Summer A', sections: 'All Sections', description: 'First semester biology covering cells, genetics, and basic biological principles.' },
+            { code: 'BSC2011', name: 'Biology 2', term: 'Summer C', sections: 'All Sections', description: 'Second semester biology covering evolution, ecology, and biological diversity.' },
+            { code: 'BUL4310', name: 'Business Law', term: 'Summer A', sections: 'All Sections', description: 'Legal principles in business contexts, including contracts and regulations.' },
+            { code: 'CHM2045', name: 'General Chemistry I', term: 'Summer A', sections: 'All Sections', description: 'First semester chemistry covering atomic structure, periodicity, and chemical bonding.' },
+            { code: 'CHM2046', name: 'General Chemistry II', term: 'Summer B', sections: 'All Sections', description: 'Second semester chemistry covering thermodynamics, kinetics, and equilibrium.' },
+            { code: 'ECO2013', name: 'Macroeconomics', term: 'Summer B', sections: 'All Sections', description: 'Economic analysis at national level, including inflation, unemployment, and fiscal policy.' },
+            { code: 'ECO2023', name: 'Microeconomics', term: 'Summer B', sections: 'All Sections', description: 'Economic analysis at individual and business level, including supply, demand, and market structures.' },
+            { code: 'MAC1105', name: 'College Algebra', term: 'Summer A', sections: 'All Sections', description: 'Algebra concepts including functions, equations, and mathematical reasoning.' },
+            { code: 'MAC2311', name: 'Calculus I', term: 'Summer B', sections: 'All Sections', description: 'First semester calculus covering limits, derivatives, and basic integration.' },
+            { code: 'PHY2048', name: 'Physics with Calculus I', term: 'Summer C', sections: 'All Sections', description: 'First semester calculus-based physics covering mechanics and dynamics.' },
+            { code: 'PHY2049', name: 'Physics with Calculus II', term: 'Summer C', sections: 'All Sections', description: 'Second semester calculus-based physics covering electricity, magnetism, and waves.' },
+            { code: 'PSY2012', name: 'Psychology', term: 'Summer B', sections: 'All Sections', description: 'Introduction to psychological theories, research methods, and applications.' },
+            { code: 'STA2023', name: 'Statistics', term: 'Summer A', sections: 'All Sections', description: 'Statistical concepts, probability, and data analysis techniques.' }
+        ];
+        
+        // Global Variables
+        let selectedCourseForReplacement = null;
+        let selectedCourseCode = null;
+        
+        // Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate course lists
+            populateAddCourseList();
+            populateReplaceCourseList();
+            
+            // Check if there are any future courses
+            updateFutureCoursesVisibility();
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.matches('.course-action-btn')) {
+                    const dropdowns = document.querySelectorAll('.dropdown-menu');
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+        });
+        
+        // Toggle course action dropdown menu
+        function toggleActionMenu(event, courseCode) {
+            event.stopPropagation();
+            
+            // Close all other dropdowns first
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== `dropdown-${courseCode}`) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle the clicked dropdown
+            const dropdown = document.getElementById(`dropdown-${courseCode}`);
+            dropdown.classList.toggle('show');
+            
+            // Position dropdown relative to button
+            const button = event.target;
+            const rect = button.getBoundingClientRect();
+            dropdown.style.top = `${rect.bottom + 5}px`;
+            dropdown.style.right = `${window.innerWidth - rect.right}px`;
+        }
+        
+        // Open change course modal
+        function openChangeCourseModal(courseCode, courseName) {
+            document.getElementById('selectedCourse').textContent = `${courseCode} - ${courseName}`;
+            selectedCourseCode = courseCode;
+            document.getElementById('changeCourseModal').classList.add('show');
+        }
+        
+        // Open add future course modal
+        function openAddFutureCourseModal() {
+            // Reset filters
+            document.getElementById('add-course-search').value = '';
+            document.getElementById('add-course-department').value = 'all';
+            document.getElementById('add-course-term').value = 'all';
+            populateAddCourseList();
+            
+            document.getElementById('addFutureCourseModal').classList.add('show');
+        }
+        
+        // Populate add course list
+        function populateAddCourseList() {
+            const courseList = document.getElementById('add-course-list');
+            courseList.innerHTML = '';
+            
+            // Filter out already selected courses and courses scheduled for replacement
+            const selectedCourseCodes = Array.from(document.querySelectorAll('#current-courses .course-item')).map(item => item.dataset.code);
+            const scheduledCourseCodes = Array.from(document.querySelectorAll('#future-courses .course-item')).map(item => item.dataset.code);
+            
+            const availableCourses = allCourses.filter(course => 
+                !selectedCourseCodes.includes(course.code) && 
+                !scheduledCourseCodes.includes(course.code)
+            );
+            
+            availableCourses.forEach(course => {
+                const courseOption = document.createElement('div');
+                courseOption.className = 'course-option';
+                courseOption.dataset.code = course.code;
+                courseOption.dataset.term = course.term;
+                courseOption.dataset.department = course.code.split(/[0-9]/)[0];
+                
+                courseOption.innerHTML = `
+                    <div class="course-option-title">${course.code} - ${course.name}</div>
+                    <div class="course-option-desc">${course.description}</div>
+                    <div style="font-size: 12px; margin-top: 5px; color: #666;">
+                        <strong>${course.term}</strong> &bull; ${course.sections}
+                    </div>
+                `;
+                
+                courseOption.addEventListener('click', function() {
+                    selectCourse(this, 'add-course-list');
+                });
+                
+                courseList.appendChild(courseOption);
+            });
+        }
+        
+        // Populate replace course list
+        function populateReplaceCourseList() {
+            const courseList = document.getElementById('replace-course-list');
+            courseList.innerHTML = '';
+            
+            // Filter out already selected courses and courses scheduled for replacement
+            const selectedCourseCodes = Array.from(document.querySelectorAll('#current-courses .course-item')).map(item => item.dataset.code);
+            const scheduledCourseCodes = Array.from(document.querySelectorAll('#future-courses .course-item')).map(item => item.dataset.code);
+            
+            const availableCourses = allCourses.filter(course => 
+                !selectedCourseCodes.includes(course.code) && 
+                !scheduledCourseCodes.includes(course.code)
+            );
+            
+            availableCourses.forEach(course => {
+                const courseOption = document.createElement('div');
+                courseOption.className = 'course-option';
+                courseOption.dataset.code = course.code;
+                courseOption.dataset.term = course.term;
+                courseOption.dataset.department = course.code.split(/[0-9]/)[0];
+                
+                courseOption.innerHTML = `
+                    <div class="course-option-title">${course.code} - ${course.name}</div>
+                    <div class="course-option-desc">${course.description}</div>
+                    <div style="font-size: 12px; margin-top: 5px; color: #666;">
+                        <strong>${course.term}</strong> &bull; ${course.sections}
+                    </div>
+                `;
+                
+                courseOption.addEventListener('click', function() {
+                    selectCourse(this, 'replace-course-list');
+                });
+                
+                courseList.appendChild(courseOption);
+            });
+        }
+        
+        // Filter courses by search term
+        function filterCourses(input) {
+            const searchTerm = input.value.toLowerCase();
+            const containerId = input.closest('.modal-body').querySelector('.course-list').id;
+            const courseList = document.getElementById(containerId);
+            
+            courseList.querySelectorAll('.course-option').forEach(option => {
+                const title = option.querySelector('.course-option-title').textContent.toLowerCase();
+                const desc = option.querySelector('.course-option-desc').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+        
+        // Filter add courses by department
+        function filterCoursesByDepartment() {
+            const department = document.getElementById('add-course-department').value;
+            const term = document.getElementById('add-course-term').value;
+            const searchTerm = document.getElementById('add-course-search').value.toLowerCase();
+            
+            document.querySelectorAll('#add-course-list .course-option').forEach(option => {
+                const optionDepartment = option.dataset.department;
+                const optionTerm = option.dataset.term;
+                const title = option.querySelector('.course-option-title').textContent.toLowerCase();
+                const desc = option.querySelector('.course-option-desc').textContent.toLowerCase();
+                
+                const matchesDepartment = department === 'all' || optionDepartment === department;
+                const matchesTerm = term === 'all' || optionTerm === term;
+                const matchesSearch = searchTerm === '' || title.includes(searchTerm) || desc.includes(searchTerm);
+                
+                if (matchesDepartment && matchesTerm && matchesSearch) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+        
+        // Filter add courses by term
+        function filterCoursesByTerm() {
+            filterCoursesByDepartment(); // Reuse the same function to apply all filters
+        }
+        
+        // Filter replace courses by search
+        function filterReplaceCoursesSearch() {
+            const searchTerm = document.getElementById('replace-course-search').value.toLowerCase();
+            const department = document.getElementById('replace-course-department').value;
+            const term = document.getElementById('replace-course-term').value;
+            
+            document.querySelectorAll('#replace-course-list .course-option').forEach(option => {
+                const optionDepartment = option.dataset.department;
+                const optionTerm = option.dataset.term;
+                const title = option.querySelector('.course-option-title').textContent.toLowerCase();
+                const desc = option.querySelector('.course-option-desc').textContent.toLowerCase();
+                
+                const matchesDepartment = department === 'all' || optionDepartment === department;
+                const matchesTerm = term === 'all' || optionTerm === term;
+                const matchesSearch = searchTerm === '' || title.includes(searchTerm) || desc.includes(searchTerm);
+                
+                if (matchesDepartment && matchesTerm && matchesSearch) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+        
+        // Filter replace courses by department
+        function filterReplaceCoursesByDepartment() {
+            const department = document.getElementById('replace-course-department').value;
+            const term = document.getElementById('replace-course-term').value;
+            const searchTerm = document.getElementById('replace-course-search').value.toLowerCase();
+            
+            document.querySelectorAll('#replace-course-list .course-option').forEach(option => {
+                const optionDepartment = option.dataset.department;
+                const optionTerm = option.dataset.term;
+                const title = option.querySelector('.course-option-title').textContent.toLowerCase();
+                const desc = option.querySelector('.course-option-desc').textContent.toLowerCase();
+                
+                const matchesDepartment = department === 'all' || optionDepartment === department;
+                const matchesTerm = term === 'all' || optionTerm === term;
+                const matchesSearch = searchTerm === '' || title.includes(searchTerm) || desc.includes(searchTerm);
+                
+                if (matchesDepartment && matchesTerm && matchesSearch) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+        
+        // Filter replace courses by term
+        function filterReplaceCoursesByTerm() {
+            filterReplaceCoursesByDepartment(); // Reuse the same function to apply all filters
+        }
+        
+        // Schedule replacement from actions menu
+        function scheduleReplacement(courseCode, courseName) {
+            // Close dropdown menu
+            document.getElementById(`dropdown-${courseCode}`).classList.remove('show');
+            
+            // Store selected course for replacement
+            selectedCourseForReplacement = courseCode;
+            
+            // Update the modal text
+            document.getElementById('courseToReplace').textContent = `${courseCode} - ${courseName}`;
+            
+            // Reset filters
+            document.getElementById('replace-course-search').value = '';
+            document.getElementById('replace-course-department').value = 'all';
+            document.getElementById('replace-course-term').value = 'all';
+            
+            // Refresh course list
+            populateReplaceCourseList();
+            
+            // Show the replacement modal
+            document.getElementById('replaceCourseModal').classList.add('show');
+        }
+        
+        // Schedule replacement from course modal
+        function scheduleReplacementFromModal() {
+            const courseFullName = document.getElementById('selectedCourse').textContent;
+            const courseCode = selectedCourseCode;
+            const courseName = courseFullName.split(' - ')[1];
+            
+            // Close the current modal
+            closeModal();
+            
+            // Set up the replacement modal
+            document.getElementById('courseToReplace').textContent = courseFullName;
+            
+            // Store the course code for later use
+            selectedCourseForReplacement = courseCode;
+            
+            // Reset filters
+            document.getElementById('replace-course-search').value = '';
+            document.getElementById('replace-course-department').value = 'all';
+            document.getElementById('replace-course-term').value = 'all';
+            
+            // Refresh course list
+            populateReplaceCourseList();
+            
+            // Show the replacement modal
+            document.getElementById('replaceCourseModal').classList.add('show');
+        }
+        
+        // View details of current course
+        function viewCurrentCourseDetails() {
+            // This would link to course details page in a real implementation
+            alert(`Viewing details for ${selectedCourseCode}`);
+            closeModal();
+        }
+        
+        // Close modal
+        function closeModal() {
+            // Hide all modals
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('show');
+            });
+            
+            // Reset selection
+            document.querySelectorAll('.course-option.selected').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Reset selected course
+            selectedCourseCode = null;
+        }
+        
+        // Select course from options
+        function selectCourse(element, listId) {
+            // Clear previous selections
+            const courseList = document.getElementById(listId);
+            courseList.querySelectorAll('.course-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Set new selection
+            element.classList.add('selected');
+            
+            // Store selected course code
+            selectedCourseCode = element.dataset.code;
+        }
+        
+        // Add future course
+        function addFutureCourse() {
+            if (!selectedCourseCode) {
+                alert('Please select a course first.');
+                return;
+            }
+            
+            // Get the selected course details
+            const selectedCourse = allCourses.find(course => course.code === selectedCourseCode);
+            
+            // Close modal
+            closeModal();
+            
+            // Create the future course element
+            addFutureCourseToUI(selectedCourseCode, selectedCourse.name);
+            
+            // Show confirmation
+            showConfirmation();
+        }
+        
+        // Schedule course replacement
+        function scheduleCourseReplacement() {
+            if (!selectedCourseCode) {
+                alert('Please select a course first.');
+                return;
+            }
+            
+            // Get the selected course details
+            const selectedCourse = allCourses.find(course => course.code === selectedCourseCode);
+            const courseCodeToReplace = selectedCourseForReplacement;
+            const courseToReplace = document.getElementById('courseToReplace').textContent;
+            const courseNameToReplace = courseToReplace.split(' - ')[1];
+            
+            // Close modal
+            closeModal();
+            
+            // Check if this course is already scheduled to replace another course
+            const existingFutureCourse = document.querySelector(`#future-courses .course-item[data-replaces="${courseCodeToReplace}"]`);
+            if (existingFutureCourse) {
+                // Remove the existing future course
+                existingFutureCourse.remove();
+            }
+            
+            // Create the future course element
+            addFutureCourseToUI(selectedCourseCode, selectedCourse.name, courseCodeToReplace, courseNameToReplace);
+            
+            // Show confirmation
+            showConfirmation();
+        }
+        
+        // Add future course to UI
+        function addFutureCourseToUI(courseCode, courseName, replacesCode = null, replacesName = null) {
+            // Get the first two letters for the icon
+            const iconText = courseName.substring(0, 2).toUpperCase();
+            
+            // Create the element
+            const courseItem = document.createElement('div');
+            courseItem.className = 'course-item';
+            courseItem.dataset.code = courseCode;
+            courseItem.dataset.name = courseName;
+            
+            if (replacesCode) {
+                courseItem.dataset.replaces = replacesCode;
+                
+                // Create HTML for replacement course
+                courseItem.innerHTML = `
+                    <div class="course-icon future-icon">${iconText}</div>
+                    <div class="course-details">
+                        <div class="course-name">${courseCode} - ${courseName}</div>
+                        <div class="course-description">This course will replace ${replacesCode} - ${replacesName} on your next billing date.</div>
+                    </div>
+                    <div class="course-status-badge status-future">Scheduled</div>
+                    <div class="course-actions">
+                        <button class="course-action-btn" onclick="cancelFutureCourse('${courseCode}')">✕</button>
+                    </div>
+                `;
+            } else {
+                // Create HTML for added course
+                courseItem.innerHTML = `
+                    <div class="course-icon future-icon">${iconText}</div>
+                    <div class="course-details">
+                        <div class="course-name">${courseCode} - ${courseName}</div>
+                        <div class="course-description">This course will be added to your plan on your next billing date.</div>
+                    </div>
+                    <div class="course-status-badge status-future">Scheduled</div>
+                    <div class="course-actions">
+                        <button class="course-action-btn" onclick="cancelFutureCourse('${courseCode}')">✕</button>
+                    </div>
+                `;
+            }
+            
+            // Add to the future courses list
+            document.getElementById('future-courses').appendChild(courseItem);
+            
+            // Make sure the changes pending badge is visible
+            document.getElementById('changes-pending-badge').style.display = '';
+            
+            // Make sure the future changes section is visible
+            updateFutureCoursesVisibility();
+        }
+        
+        // Cancel future course
+        function cancelFutureCourse(courseCode) {
+            if (confirm('Are you sure you want to cancel this scheduled course change?')) {
+                // Find and remove the course element
+                const courseElement = document.querySelector(`#future-courses .course-item[data-code="${courseCode}"]`);
+                courseElement.remove();
+                
+                // Check if there are any future courses left
+                updateFutureCoursesVisibility();
+                
+                // Show notification
+                showToast('Scheduled change cancelled.');
+            }
+        }
+        
+        // View course details
+        function viewCourseDetails(courseCode) {
+            // This would link to course details page in a real implementation
+            alert(`Viewing details for ${courseCode}`);
+        }
+        
+        // Update future courses section visibility
+        function updateFutureCoursesVisibility() {
+            const futureCourses = document.querySelectorAll('#future-courses .course-item');
+            const futureChangesSection = document.getElementById('future-changes-section');
+            const changesPendingBadge = document.getElementById('changes-pending-badge');
+            
+            if (futureCourses.length === 0) {
+                // No future courses, show empty state
+                futureChangesSection.innerHTML = document.getElementById('empty-future-changes-template').innerHTML;
+                changesPendingBadge.style.display = 'none';
+            } else {
+                // Show the changes pending badge
+                changesPendingBadge.style.display = '';
+            }
+        }
+        
+        // Show confirmation modal
+        function showConfirmation() {
+            document.getElementById('confirmationModal').classList.add('show');
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

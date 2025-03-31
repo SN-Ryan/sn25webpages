@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Logged Out | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --success: #2e7d32;
+            --success-light: #e8f5e9;
+            --warning: #f57c00;
+            --warning-light: #fff8e1;
+            --text: #333;
+            --text-light: #666;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .header-logo {
+            background-color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .logout-container {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .logout-header {
+            padding: 30px;
+            background-color: var(--primary-light);
+            text-align: center;
+            position: relative;
+        }
+        
+        .status-icon {
+            width: 64px;
+            height: 64px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-icon.success {
+            color: var(--success);
+        }
+        
+        .status-icon.timeout {
+            color: var(--warning);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .logout-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .message {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        .security-notice {
+            background-color: var(--success-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 14px;
+            color: var(--text);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .security-notice .icon {
+            color: var(--success);
+            margin-top: 2px;
+        }
+        
+        .timeout-notice {
+            background-color: var(--warning-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 14px;
+            color: var(--text);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            display: none;
+        }
+        
+        .timeout-notice .icon {
+            color: var(--warning);
+            margin-top: 2px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(211, 47, 47, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(211, 47, 47, 0.4);
+        }
+        
+        .navigation-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .navigation-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .navigation-links a:hover {
+            color: var(--primary-hover);
+        }
+        
+        .countdown {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 20px;
+            display: none;
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: auto;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        footer a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="header-logo">
+        <a href="index.html" class="logo">Smokin'Notes</a>
+    </div>
+    
+    <main>
+        <div class="logout-container">
+            <div class="logout-header">
+                <div class="status-icon success" id="status-icon">✓</div>
+                <h1 id="logout-title">Successfully Logged Out</h1>
+            </div>
+            
+            <div class="logout-body">
+                <p class="message" id="logout-message">
+                    Thank you for using Smokin'Notes. Your session has been securely terminated, and all sensitive data has been cleared from this device.
+                </p>
+                
+                <div class="security-notice">
+                    <span class="icon">🔒</span>
+                    <div>
+                        <strong>Security Notice:</strong> For your security, we recommend closing this browser window or tab after logging out.
+                    </div>
+                </div>
+                
+                <div class="timeout-notice" id="timeout-notice">
+                    <span class="icon">⏰</span>
+                    <div>
+                        <strong>Session Timeout:</strong> Your session has expired due to inactivity. This is a security measure to protect your account.
+                    </div>
+                </div>
+                
+                <a href="login.html" class="btn btn-primary">Log In Again</a>
+                
+                <p class="countdown" id="countdown">Redirecting to login page in <span id="timer">10</span> seconds</p>
+                
+                <div class="navigation-links">
+                    <a href="index.html">Home</a>
+                    <a href="help.html">Help</a>
+                    <a href="contact.html">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced security: Clear all potential storage
+            function clearAllStorage() {
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                // Clear cookies
+                document.cookie.split(';').forEach(function(cookie) {
+                    const name = cookie.trim().split('=')[0];
+                    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                });
+                
+                // Clear any authentication tokens from memory
+                if (window.authToken) {
+                    window.authToken = null;
+                }
+            }
+            
+            // Execute storage clearing
+            clearAllStorage();
+            
+            // Handle different logout scenarios
+            const urlParams = new URLSearchParams(window.location.search);
+            const logoutType = urlParams.get('type');
+            
+            // Default is normal logout
+            let isTimeout = false;
+            let isForced = false;
+            
+            // Check for timeout or forced logout
+            if (logoutType === 'timeout') {
+                isTimeout = true;
+                document.getElementById('status-icon').textContent = '⏰';
+                document.getElementById('status-icon').classList.remove('success');
+                document.getElementById('status-icon').classList.add('timeout');
+                document.getElementById('logout-title').textContent = 'Session Expired';
+                document.getElementById('logout-message').textContent = 'Your session has timed out due to inactivity. This is a security feature to protect your account data.';
+                document.getElementById('timeout-notice').style.display = 'flex';
+            } else if (logoutType === 'forced') {
+                isForced = true;
+                document.getElementById('status-icon').textContent = '🔒';
+                document.getElementById('logout-title').textContent = 'Account Security';
+                document.getElementById('logout-message').textContent = 'Your account was logged out due to a security policy. This may happen when your password is changed or if unusual activity is detected.';
+            }
+            
+            // Auto-redirect for timeout logouts
+            if (isTimeout) {
+                const countdownElement = document.getElementById('countdown');
+                const timerElement = document.getElementById('timer');
+                let timeLeft = 10;
+                
+                countdownElement.style.display = 'block';
+                
+                const countdownInterval = setInterval(function() {
+                    timeLeft--;
+                    timerElement.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        window.location.href = 'login.html';
+                    }
+                }, 1000);
+            }
+            
+            // Prevent back button from returning to authenticated pages
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', function() {
+                history.pushState(null, null, document.URL);
+            });
+        });
+    </script>
+</body>
+</html>

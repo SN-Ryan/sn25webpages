@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select New Courses | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --secondary: #2e7d32;
+            --secondary-hover: #1b5e20;
+            --warning: #f57c00;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        .breadcrumb {
+            padding: 15px 30px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 5px;
+            color: #999;
+        }
+        
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subscription-badge {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .subscription-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        
+        .subscription-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .selected-courses {
+            margin-bottom: 20px;
+            background-color: var(--primary-light);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .past-courses {
+            margin-bottom: 20px;
+            background-color: rgba(245, 124, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .selection-status {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .past-courses-title {
+            font-weight: 600;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+        
+        .selected-course-list, .past-course-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .selected-course-tag {
+            background-color: white;
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--primary);
+        }
+        
+        .past-course-tag {
+            background-color: white;
+            color: var(--warning);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--warning);
+        }
+        
+        .remove-course {
+            width: 16px;
+            height: 16px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        
+        .category-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .category-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .category-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex: 1;
+            display: flex;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px 0 0 6px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 0 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+        }
+        
+        .filter-select {
+            width: 200px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .course-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .course-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .course-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .course-card.selected:before {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .semester-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .course-code {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .course-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .course-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        
+        .page-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .page-number:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .page-number.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#" class="active">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+    
+    <div class="breadcrumb">
+        <a href="#">Home</a> <span>›</span> 
+        <a href="#">My Classes</a> <span>›</span> 
+        Update Course Selection
+    </div>
+    
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <div>Update Your Course Selection</div>
+                <div class="subscription-badge">2 Class Plan • Active</div>
+            </div>
+            <div class="card-body">
+                <div class="subscription-info">
+                    <div class="subscription-title">Welcome back, Ry!</div>
+                    <p>A new semester has started! You can now update your course selections for Summer 2025. Your current membership allows access to 2 courses at a time.</p>
+                </div>
+                
+                <div class="past-courses">
+                    <div class="past-courses-title">Your Previous Course Selections</div>
+                    <p>You had access to these courses during Spring 2025. Select your new courses for Summer 2025 below.</p>
+                    <div class="past-course-list">
+                        <div class="past-course-tag">
+                            BSC2010 - Biology I <span class="remove-course">×</span>
+                        </div>
+                        <div class="past-course-tag">
+                            ECO2013 - Macroeconomics <span class="remove-course">×</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="selected-courses">
+                    <div class="selection-status">Select 2 courses for Summer 2025</div>
+                    <div class="selected-course-list">
+                        <!-- Selected courses will appear here -->
+                    </div>
+                </div>
+                
+                <div class="category-tabs">
+                    <div class="category-tab active">All</div>
+                    <div class="category-tab">Business</div>
+                    <div class="category-tab">Science</div>
+                </div>
+                
+                <div class="search-filter">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search for a course...">
+                        <button>Search</button>
+                    </div>
+                    <div class="filter-select">
+                        <select>
+                            <option>All Departments</option>
+                            <option>APK - Applied Physiology</option>
+                            <option>BSC - Biological Sciences</option>
+                            <option>BUL - Business Law</option>
+                            <option>ECO - Economics</option>
+                            <option>ENT - Entrepreneurship</option>
+                            <option>GEB - General Business</option>
+                            <option>MAN - Management</option>
+                            <option>MAR - Marketing</option>
+                            <option>MCB - Microbiology</option>
+                            <option>PSY - Psychology</option>
+                            <option>STA - Statistics</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="course-grid" class="course-grid">
+                    <!-- Course cards will be dynamically generated here -->
+                </div>
+                
+                <div class="pagination">
+                    <!-- Pagination will be dynamically generated -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary">Cancel</button>
+                    <button class="btn btn-primary" id="continue-btn">Update Selections</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a> |
+            <a href="#">Terms</a> |
+            <a href="#">Help</a> |
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Course data
+            const allCourses = [
+                { code: 'APK2100', name: 'Anatomy (Web Sections)', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'APK2100-L', name: 'Anatomy (Live Sections)', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'APK2105', name: 'Physiology (Web Sections)', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'APK2105-L', name: 'Physiology (Live Sections)', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'BSC2010', name: 'Biology I', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'BSC2011', name: 'Biology 2', term: 'Summer C', semester: 'Summer 2025', selected: false },
+                { code: 'BUL4310', name: 'Business Law', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'ECO2013', name: 'Macroeconomics', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'ECO2023', name: 'Microeconomics', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'ENT3003', name: 'Entrepreneurship', term: 'Summer C', semester: 'Summer 2025', selected: false },
+                { code: 'GEB3373', name: 'International Business', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'MAN3025', name: 'Management', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'MAN4504', name: 'Operations Management', term: 'Summer C', semester: 'Summer 2025', selected: false },
+                { code: 'MAR3023', name: 'Marketing', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'MCB2000', name: 'Microbiology', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'MCB3020-A', name: 'Microbiology with Professor Asghari', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'MCB3020-B', name: 'Microbiology with Dr. Bacusmo', term: 'Summer A', semester: 'Summer 2025', selected: false },
+                { code: 'MCB4503', name: 'Virology', term: 'Summer C', semester: 'Summer 2025', selected: false },
+                { code: 'PSY2012', name: 'Psychology', term: 'Summer B', semester: 'Summer 2025', selected: false },
+                { code: 'STA2023', name: 'Statistics', term: 'Summer A', semester: 'Summer 2025', selected: false }
+            ];
+            
+            // Past courses
+            const pastCourses = [
+                { code: 'BSC2010', name: 'Biology I' },
+                { code: 'ECO2013', name: 'Macroeconomics' }
+            ];
+            
+            // State variables
+            let currentPage = 1;
+            let coursesPerPage = 10;
+            let filteredCourses = [...allCourses];
+            let currentCategory = 'All';
+            
+            // DOM elements
+            const courseGrid = document.getElementById('course-grid');
+            const paginationContainer = document.querySelector('.pagination');
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const departmentSelect = document.querySelector('.filter-select select');
+            const searchInput = document.querySelector('.search-box input');
+            const searchButton = document.querySelector('.search-box button');
+            const selectedCoursesList = document.querySelector('.selected-course-list');
+            const pastCoursesList = document.querySelector('.past-course-list');
+            const selectionStatus = document.querySelector('.selection-status');
+            
+            // Initialize page
+            renderCourses();
+            updatePagination();
+            updateSelectedCoursesDisplay();
+            
+            // Event listeners
+            
+            // Category tabs click handler
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.textContent;
+                    filterCourses();
+                });
+            });
+            
+            // Department filter change handler
+            departmentSelect.addEventListener('change', function() {
+                filterCourses();
+            });
+            
+            // Search button click handler
+            searchButton.addEventListener('click', function() {
+                filterCourses();
+            });
+            
+            // Search input enter key handler
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterCourses();
+                }
+            });
+            
+            // Pagination click handler
+            paginationContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('page-number') && !e.target.classList.contains('active')) {
+                    currentPage = parseInt(e.target.textContent);
+                    renderCourses();
+                    updatePagination();
+                }
+            });
+            
+            // Course selection handler
+            courseGrid.addEventListener('click', function(e) {
+                const courseCard = e.target.closest('.course-card');
+                if (courseCard) {
+                    const courseCode = courseCard.querySelector('.course-code').textContent;
+                    toggleCourseSelection(courseCode);
+                }
+            });
+            
+            // Remove selected course handler
+            selectedCoursesList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-course')) {
+                    const courseTag = e.target.closest('.selected-course-tag');
+                    const courseCode = courseTag.textContent.split(' - ')[0].trim();
+                    toggleCourseSelection(courseCode);
+                }
+            });
+            
+            // Remove past course handler
+            pastCoursesList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-course')) {
+                    const courseTag = e.target.closest('.past-course-tag');
+                    const courseCode = courseTag.textContent.split(' - ')[0].trim();
+                    
+                    // Find and remove the course from pastCourses
+                    const courseIndex = pastCourses.findIndex(c => c.code === courseCode);
+                    if (courseIndex !== -1) {
+                        pastCourses.splice(courseIndex, 1);
+                        renderPastCourses();
+                    }
+                }
+            });
+            
+            // Continue button click handler
+            document.getElementById('continue-btn').addEventListener('click', function() {
+                const selectedCourses = allCourses.filter(c => c.selected);
+                
+                if (selectedCourses.length === 0) {
+                    alert('Please select at least one course for the upcoming semester.');
+                    return;
+                }
+                
+                // Show confirmation
+                alert(`Course selections updated! You selected: ${selectedCourses.map(c => c.code).join(', ')}`);
+            });
+            
+            // Functions
+            
+            // Filter courses based on search and category
+            function filterCourses() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedDepartment = departmentSelect.value;
+                const departmentCode = selectedDepartment.split(' - ')[0];
+                
+                filteredCourses = allCourses.filter(course => {
+                    // Category filter
+                    if (currentCategory === 'Business' && 
+                        !['BUL', 'ECO', 'GEB', 'MAN', 'MAR', 'ENT', 'STA'].includes(course.code.substring(0, 3))) {
+                        return false;
+                    }
+                    if (currentCategory === 'Science' && 
+                        !['APK', 'BSC', 'MCB', 'PSY'].includes(course.code.substring(0, 3))) {
+                        return false;
+                    }
+                    
+                    // Department filter
+                    if (selectedDepartment !== 'All Departments' && 
+                        !course.code.startsWith(departmentCode)) {
+                        return false;
+                    }
+                    
+                    // Search filter
+                    if (searchTerm && 
+                        !course.code.toLowerCase().includes(searchTerm) && 
+                        !course.name.toLowerCase().includes(searchTerm)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                currentPage = 1;
+                renderCourses();
+                updatePagination();
+            }
+            
+            // Render courses for current page
+            function renderCourses() {
+                courseGrid.innerHTML = '';
+                
+                const startIndex = (currentPage - 1) * coursesPerPage;
+                const endIndex = startIndex + coursesPerPage;
+                const coursesToShow = filteredCourses.slice(startIndex, endIndex);
+                
+                coursesToShow.forEach(course => {
+                    const courseElement = document.createElement('div');
+                    courseElement.className = `course-card${course.selected ? ' selected' : ''}`;
+                    
+                    courseElement.innerHTML = `
+                        <div class="semester-tag">${course.semester}</div>
+                        <div class="course-code">${course.code}</div>
+                        <div class="course-name">${course.name}</div>
+                        <div class="course-details">
+                            <span>${course.term}</span>
+                            <span>Study materials available</span>
+                        </div>
+                    `;
+                    
+                    courseGrid.appendChild(courseElement);
+                });
+            }
+            
+            // Update pagination
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+                paginationContainer.innerHTML = '';
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageElement = document.createElement('div');
+                    pageElement.className = `page-number${i === currentPage ? ' active' : ''}`;
+                    pageElement.textContent = i;
+                    paginationContainer.appendChild(pageElement);
+                }
+            }
+            
+            // Toggle course selection
+            function toggleCourseSelection(courseCode) {
+                let selectedCount = allCourses.filter(c => c.selected).length;
+                const courseIndex = allCourses.findIndex(c => c.code === courseCode);
+                
+                if (courseIndex !== -1) {
+                    // If already selected, deselect
+                    if (allCourses[courseIndex].selected) {
+                        allCourses[courseIndex].selected = false;
+                        selectedCount--;
+                    } 
+                    // If not selected and less than 2 courses selected, select it
+                    else if (selectedCount < 2) {
+                        allCourses[courseIndex].selected = true;
+                        selectedCount++;
+                    }
+                    // Otherwise show message that max courses are selected
+                    else {
+                        alert('You can only select up to 2 courses with your plan.');
+                        return;
+                    }
+                    
+                    renderCourses();
+                    updateSelectedCoursesDisplay();
+                }
+            }
+            
+            // Update selected courses display
+            function updateSelectedCoursesDisplay() {
+                selectedCoursesList.innerHTML = '';
+                const selectedCourses = allCourses.filter(c => c.selected);
+                
+                selectedCourses.forEach(course => {
+                    const courseTag = document.createElement('div');
+                    courseTag.className = 'selected-course-tag';
+                    courseTag.innerHTML = `
+                        ${course.code} - ${course.name} <span class="remove-course">×</span>
+                    `;
+                    selectedCoursesList.appendChild(courseTag);
+                });
+                
+                const remainingSelections = 2 - selectedCourses.length;
+                if (remainingSelections === 0) {
+                    selectionStatus.textContent = 'You have selected all available courses for your plan.';
+                } else {
+                    selectionStatus.textContent = `Select ${remainingSelections} more course${remainingSelections === 1 ? '' : 's'} for Summer 2025`;
+                }
+            }
+            
+            // Render past courses
+            function renderPastCourses() {
+                pastCoursesList.innerHTML = '';
+                
+                pastCourses.forEach(course => {
+                    const courseTag = document.createElement('div');
+                    courseTag.className = 'past-course-tag';
+                    courseTag.innerHTML = `
+                        ${course.code} - ${course.name} <span class="remove-course">×</span>
+                    `;
+                    pastCoursesList.appendChild(courseTag);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

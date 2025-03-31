@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Course | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 800px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        
+        .membership-summary {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .membership-badge {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            padding: 4px 10px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .course-status {
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .course-list {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .course-item {
+            padding: 15px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .course-info {
+            flex: 1;
+        }
+        
+        .course-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .course-details {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .action-button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .action-button.remove {
+            color: #e53935;
+            border-color: #e53935;
+        }
+        
+        .action-button.remove:hover {
+            background-color: #ffebee;
+        }
+        
+        .action-button.add {
+            color: #388e3c;
+            border-color: #388e3c;
+        }
+        
+        .action-button.add:hover {
+            background-color: #e8f5e9;
+        }
+        
+        .action-button.disabled {
+            color: #9e9e9e;
+            border-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .action-button.disabled:hover {
+            background-color: transparent;
+        }
+        
+        .search-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .search-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px 0 0 4px;
+            font-size: 15px;
+        }
+        
+        .search-box button {
+            padding: 0 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tag {
+            padding: 6px 12px;
+            background-color: var(--light-bg);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .category-tag:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .category-tag.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .available-courses {
+            margin-top: 20px;
+        }
+        
+        .course-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .course-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .course-card .course-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .course-card .course-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .course-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .course-card.selected:before {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .course-term {
+            font-weight: 500;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-link {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-link:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .page-link.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-bg);
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .notification.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .department-filter {
+            margin-bottom: 20px;
+        }
+        
+        .department-filter select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#" class="active">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="logout.html">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>My Classes</h2>
+                <ul>
+                    <li><a href="#" class="active">Manage Courses</a></li>
+                    <li><a href="#">Available Materials</a></li>
+<!--                    <li><a href="#">Downloads</a></li>  -->
+                    <li><a href="#">Recent Activity</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>Manage Your Courses</h1>
+                <p class="form-subtitle">Add or remove courses based on your current membership plan.</p>
+                
+                <div class="membership-summary">
+                    <div class="membership-badge">2 Course Plan</div>
+                    <div>Your current membership allows access to materials for up to 2 courses at a time.</div>
+                    <div class="course-status" id="course-status">You are currently using 2 of 2 available course slots.</div>
+                </div>
+                
+                <div class="course-list">
+                    <h2>Your Current Courses</h2>
+                    <div id="selected-courses-container">
+                        <!-- Course items will be dynamically generated here -->
+                    </div>
+                </div>
+                
+                <div class="search-section" id="search-section">
+                    <h2>Add a New Course</h2>
+                    <p class="form-subtitle" id="add-course-subtitle">You need to remove a current course before adding a new one.</p>
+                    
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Search for a course...">
+                        <button id="search-button">Search</button>
+                    </div>
+                    
+                    <div class="department-filter">
+                        <select id="department-filter">
+                            <option value="all">All Departments</option>
+                            <option value="APK">APK - Applied Physiology</option>
+                            <option value="BSC">BSC - Biological Sciences</option>
+                            <option value="BUL">BUL - Business Law</option>
+                            <option value="ECO">ECO - Economics</option>
+                            <option value="ENT">ENT - Entrepreneurship</option>
+                            <option value="GEB">GEB - General Business</option>
+                            <option value="MAN">MAN - Management</option>
+                            <option value="MAR">MAR - Marketing</option>
+                            <option value="MCB">MCB - Microbiology</option>
+                            <option value="PSY">PSY - Psychology</option>
+                            <option value="STA">STA - Statistics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="category-filter">
+                        <div class="category-tag active" data-category="all">All</div>
+                        <div class="category-tag" data-category="business">Business</div>
+                        <div class="category-tag" data-category="science">Science</div>
+                    </div>
+                    
+                    <div class="available-courses" id="available-courses">
+                        <!-- Course cards will be dynamically generated here -->
+                    </div>
+                    
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be dynamically generated -->
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="cancel-button">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-button">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="notification" id="notification">
+        <div id="notification-message"></div>
+    </div>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Course data
+            const allCourses = [
+                { code: 'APK2100', name: 'Anatomy', term: 'Web Sections', semester: 'Summer 2025', selected: false },
+                { code: 'APK2100-L', name: 'Anatomy', term: 'Live Sections', semester: 'Summer 2025', selected: false },
+                { code: 'APK2105', name: 'Physiology', term: 'Web Sections', semester: 'Summer 2025', selected: false },
+                { code: 'APK2105-L', name: 'Physiology', term: 'Live Sections', semester: 'Summer 2025', selected: false },
+                { code: 'BSC2010', name: 'Biology I', term: 'All Sections', semester: 'Summer 2025', selected: true },
+                { code: 'BSC2011', name: 'Biology 2', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'BUL4310', name: 'Business Law', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'ECO2013', name: 'Macroeconomics', term: 'All Sections', semester: 'Summer 2025', selected: true },
+                { code: 'ECO2023', name: 'Microeconomics', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'ENT3003', name: 'Entrepreneurship', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'GEB3373', name: 'International Business', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MAN3025', name: 'Management', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MAN4504', name: 'Operations Management', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MAR3023', name: 'Marketing', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MCB2000', name: 'Microbiology', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MCB3020-A', name: 'Microbiology with Professor Asghari', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MCB3020-B', name: 'Microbiology with Dr. Bacusmo', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'MCB4503', name: 'Virology', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'PSY2012', name: 'Psychology', term: 'All Sections', semester: 'Summer 2025', selected: false },
+                { code: 'STA2023', name: 'Statistics', term: 'All Sections', semester: 'Summer 2025', selected: false }
+            ];
+            
+            // State variables
+            let currentPage = 1;
+            let coursesPerPage = 4;
+            let filteredCourses = [...allCourses];
+            let currentCategory = 'all';
+            let currentDepartment = 'all';
+            let searchTerm = '';
+            const maxAllowedCourses = 2;
+            
+            // DOM elements
+            const selectedCoursesContainer = document.getElementById('selected-courses-container');
+            const searchSection = document.getElementById('search-section');
+            const availableCoursesContainer = document.getElementById('available-courses');
+            const paginationContainer = document.getElementById('pagination');
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const categoryTags = document.querySelectorAll('.category-tag');
+            const departmentFilter = document.getElementById('department-filter');
+            const courseStatus = document.getElementById('course-status');
+            const addCourseSubtitle = document.getElementById('add-course-subtitle');
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            // Initialize
+            renderSelectedCourses();
+            filterCourses();
+            updateCourseStatus();
+            
+            // Event listeners
+            
+            // Category filter
+            categoryTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    categoryTags.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    currentPage = 1;
+                    filterCourses();
+                });
+            });
+            
+            // Department filter
+            departmentFilter.addEventListener('change', function() {
+                currentDepartment = this.value;
+                currentPage = 1;
+                filterCourses();
+            });
+            
+            // Search functionality
+            searchButton.addEventListener('click', function() {
+                searchTerm = searchInput.value.toLowerCase();
+                currentPage = 1;
+                filterCourses();
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchTerm = searchInput.value.toLowerCase();
+                    currentPage = 1;
+                    filterCourses();
+                }
+            });
+            
+            // Available courses click handler
+            availableCoursesContainer.addEventListener('click', function(e) {
+                const courseCard = e.target.closest('.course-card');
+                if (courseCard) {
+                    const courseCode = courseCard.dataset.code;
+                    toggleCourseSelection(courseCode);
+                }
+            });
+            
+            // Selected courses container - remove button handler
+            selectedCoursesContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('action-button') && e.target.classList.contains('remove')) {
+                    const courseItem = e.target.closest('.course-item');
+                    const courseCode = courseItem.dataset.code;
+                    toggleCourseSelection(courseCode);
+                }
+            });
+            
+            // Save button handler
+            saveButton.addEventListener('click', function() {
+                showNotification('Changes saved successfully!');
+                setTimeout(() => {
+                    window.location.href = '#'; // In a real app, this would redirect to another page
+                }, 2000);
+            });
+            
+            // Cancel button handler
+            cancelButton.addEventListener('click', function() {
+                window.location.href = '#'; // In a real app, this would redirect to another page
+            });
+            
+            // Functions
+            
+            // Filter courses based on search, category, and department
+            function filterCourses() {
+                filteredCourses = allCourses.filter(course => {
+                    // Check if already selected
+                    const isAlreadySelected = course.selected;
+                    if (isAlreadySelected) return false;
+                    
+                    // Filter by category
+                    if (currentCategory === 'business' && 
+                        !['BUL', 'ECO', 'GEB', 'MAN', 'MAR', 'ENT'].includes(course.code.substring(0, 3))) {
+                        return false;
+                    }
+                    
+                    if (currentCategory === 'science' && 
+                        !['APK', 'BSC', 'MCB', 'PSY', 'STA'].includes(course.code.substring(0, 3))) {
+                        return false;
+                    }
+                    
+                    // Filter by department
+                    if (currentDepartment !== 'all' && !course.code.startsWith(currentDepartment)) {
+                        return false;
+                    }
+                    
+                    // Filter by search term
+                    if (searchTerm && 
+                        !course.code.toLowerCase().includes(searchTerm) && 
+                        !course.name.toLowerCase().includes(searchTerm)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                renderAvailableCourses();
+                renderPagination();
+            }
+            
+            // Render selected courses
+            function renderSelectedCourses() {
+                selectedCoursesContainer.innerHTML = '';
+                
+                const selectedCourses = allCourses.filter(course => course.selected);
+                
+                selectedCourses.forEach(course => {
+                    const courseItem = document.createElement('div');
+                    courseItem.className = 'course-item';
+                    courseItem.dataset.code = course.code;
+                    
+                    courseItem.innerHTML = `
+                        <div class="course-info">
+                            <div class="course-name">${course.code} - ${course.name}</div>
+                            <div class="course-details">Added on March 15, 2025</div>
+                        </div>
+                        <button class="action-button remove">Remove</button>
+                    `;
+                    
+                    selectedCoursesContainer.appendChild(courseItem);
+                });
+            }
+            
+            // Render available courses
+            function renderAvailableCourses() {
+                availableCoursesContainer.innerHTML = '';
+                
+                const startIndex = (currentPage - 1) * coursesPerPage;
+                const endIndex = Math.min(startIndex + coursesPerPage, filteredCourses.length);
+                const coursesToShow = filteredCourses.slice(startIndex, endIndex);
+                
+                if (coursesToShow.length === 0) {
+                    availableCoursesContainer.innerHTML = '<p>No courses found matching your criteria.</p>';
+                    return;
+                }
+                
+                const selectedCount = allCourses.filter(course => course.selected).length;
+                const canAddMore = selectedCount < maxAllowedCourses;
+                
+                coursesToShow.forEach(course => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-card';
+                    courseCard.dataset.code = course.code;
+                    
+                    courseCard.innerHTML = `
+                        <div class="course-name">${course.code} - ${course.name}</div>
+                        <div class="course-details">
+                            <span>${course.term}</span>
+                            <span class="course-term">${course.semester}</span>
+                        </div>
+                        <button class="action-button add${!canAddMore ? ' disabled' : ''}" style="position: absolute; top: 10px; right: 10px;">
+                            ${canAddMore ? 'Add' : 'Limit Reached'}
+                        </button>
+                    `;
+                    
+                    availableCoursesContainer.appendChild(courseCard);
+                });
+            }
+            
+            // Render pagination
+            function renderPagination() {
+                paginationContainer.innerHTML = '';
+                
+                const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+                
+                if (totalPages <= 1) return;
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageLink = document.createElement('div');
+                    pageLink.className = `page-link${i === currentPage ? ' active' : ''}`;
+                    pageLink.textContent = i;
+                    
+                    pageLink.addEventListener('click', function() {
+                        if (i !== currentPage) {
+                            currentPage = i;
+                            renderAvailableCourses();
+                            renderPagination();
+                        }
+                    });
+                    
+                    paginationContainer.appendChild(pageLink);
+                }
+            }
+            
+            // Toggle course selection
+            function toggleCourseSelection(courseCode) {
+                const courseIndex = allCourses.findIndex(c => c.code === courseCode);
+                if (courseIndex === -1) return;
+                
+                const course = allCourses[courseIndex];
+                const selectedCount = allCourses.filter(c => c.selected).length;
+                
+                // If already selected, deselect it
+                if (course.selected) {
+                    course.selected = false;
+                    showNotification(`${course.code} - ${course.name} removed successfully!`);
+                } 
+                // If not selected and can add more courses, select it
+                else if (selectedCount < maxAllowedCourses) {
+                    course.selected = true;
+                    showNotification(`${course.code} - ${course.name} added successfully!`);
+                } 
+                // Otherwise show message that max courses are selected
+                else {
+                    showNotification('You cannot add more courses. Please remove a course first.');
+                    return;
+                }
+                
+                // Re-render UI
+                renderSelectedCourses();
+                filterCourses();
+                updateCourseStatus();
+            }
+            
+            // Update course status display
+            function updateCourseStatus() {
+                const selectedCount = allCourses.filter(course => course.selected).length;
+                courseStatus.textContent = `You are currently using ${selectedCount} of ${maxAllowedCourses} available course slots.`;
+                
+                // Update add course subtitle based on available slots
+                if (selectedCount >= maxAllowedCourses) {
+                    addCourseSubtitle.textContent = 'You need to remove a current course before adding a new one.';
+                } else {
+                    addCourseSubtitle.textContent = `You can add ${maxAllowedCourses - selectedCount} more course${maxAllowedCourses - selectedCount > 1 ? 's' : ''}.`;
+                }
+                
+                // Update available courses UI - this will be handled when rendering available courses
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                notificationMessage.textContent = message;
+                notification.classList.add('show');
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

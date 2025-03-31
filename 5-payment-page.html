@@ -1,0 +1,531 @@
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cancelCheckbox = document.getElementById('cancel-acknowledge');
+            const autoCancelCheckbox = document.getElementById('auto-cancel-acknowledge');
+            const completePaymentBtn = document.getElementById('complete-payment-btn');
+            const checkboxError = document.getElementById('checkbox-error');
+            
+            function checkAllAgreements() {
+                if (cancelCheckbox.checked && autoCancelCheckbox.checked) {
+                    completePaymentBtn.disabled = false;
+                    completePaymentBtn.style.opacity = '1';
+                    checkboxError.style.display = 'none';
+                } else {
+                    completePaymentBtn.disabled = true;
+                    completePaymentBtn.style.opacity = '0.6';
+                    checkboxError.style.display = 'block';
+                }
+            }
+            
+            // Initial check
+            checkAllAgreements();
+            
+            cancelCheckbox.addEventListener('change', checkAllAgreements);
+            autoCancelCheckbox.addEventListener('change', checkAllAgreements);
+            
+            completePaymentBtn.addEventListener('click', function(e) {
+                if (completePaymentBtn.disabled) {
+                    e.preventDefault();
+                    checkboxError.style.display = 'block';
+                }
+            });
+        });
+    </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Information | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+            --success: #2e7d32;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .breadcrumb {
+            padding: 15px 30px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 5px;
+            color: #999;
+        }
+        
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .checkout-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .checkout-form {
+            flex: 1;
+        }
+        
+        .order-summary {
+            width: 350px;
+            flex-shrink: 0;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 15px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .expiry-cvv {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .expiry-cvv .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .secure-badge {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .secure-icon {
+            margin-right: 5px;
+            color: var(--success);
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-weight: 500;
+        }
+        
+        .item-price {
+            font-weight: 600;
+        }
+        
+        .summary-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .promo-code {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .promo-code input {
+            border-radius: 6px 0 0 6px;
+        }
+        
+        .promo-code button {
+            border: none;
+            background: #666;
+            color: white;
+            padding: 0 15px;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+        }
+        
+        .subscription-info {
+            padding: 15px;
+            background-color: var(--primary-light);
+            border-radius: 6px;
+            font-size: 14px;
+            color: #555;
+            margin-top: 15px;
+        }
+        
+        .cc-icons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .cc-icon {
+            width: 40px;
+            height: 25px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .steps {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border);
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary);
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--success);
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-container {
+                flex-direction: column;
+            }
+            
+            .order-summary {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+    </header>
+    
+    <div class="breadcrumb">
+        <a href="#">Home</a> <span>›</span> 
+        <a href="#">Membership</a> <span>›</span> 
+        Payment
+    </div>
+    
+    <main>
+        <div class="steps">
+            <div class="step completed">
+                <div class="step-number">1</div>
+                <div class="step-label">Choose Plan</div>
+            </div>
+            <div class="step active">
+                <div class="step-number">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-label">Select Courses</div>
+            </div>
+        </div>
+        
+        <div class="checkout-container">
+            <div class="checkout-form">
+                <div class="card">
+                    <div class="card-header">Payment Information</div>
+                    <div class="card-body">
+                        <div class="form-section">
+                            <div class="form-section-title">Billing Information</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first-name">First Name</label>
+                                    <input type="text" id="first-name" value="Alley">
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name">Last Name</label>
+                                    <input type="text" id="last-name" value="Gator">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="ally.gator@ufl.edu">
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <div class="form-section-title">Payment Method</div>
+                            <div class="cc-icons">
+                                <div class="cc-icon">Visa</div>
+                                <div class="cc-icon">MC</div>
+                                <div class="cc-icon">Amex</div>
+                                <div class="cc-icon">Disc</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-number">Card Number</label>
+                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="expiry-cvv">
+                                <div class="form-group">
+                                    <label for="expiry">Expiration Date</label>
+                                    <input type="text" id="expiry" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">Security Code (CVV)</label>
+                                    <input type="text" id="cvv" placeholder="123">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">Billing Zip Code</label>
+                                <input type="text" id="zip" placeholder="32699">
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" id="complete-payment-btn" disabled>Complete Payment</button>
+                        
+                        <div class="secure-badge">
+                            <span class="secure-icon">🔒</span> Secure payment processing
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-summary">
+                <div class="card">
+                    <div class="card-header">Order Summary</div>
+                    <div class="card-body">
+                        <div class="order-item">
+                            <div class="item-name">2 Class Plan</div>
+                            <div class="item-price">$75.00</div>
+                        </div>
+                        
+                        <div class="summary-total">
+                            <div>Total</div>
+                            <div>$75.00</div>
+                        </div>
+                        
+                        <div class="promo-code">
+                            <input type="text" placeholder="Promo Code">
+                            <button>Apply</button>
+                        </div>
+                        
+                        <div class="subscription-info">
+                            You will be charged $75 monthly on this same day of the month until you cancel. You can cancel anytime from your account settings.
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 6px; background-color: #f9f9f9;">
+                            <div style="font-weight: 600; margin-bottom: 12px; color: #333;">Required Acknowledgments</div>
+                            
+                            <div style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px;">
+                                <input type="checkbox" id="cancel-acknowledge" style="margin-top: 3px; width: auto; height: 16px; width: 16px;">
+                                <label for="cancel-acknowledge" style="font-size: 14px; color: #333; font-weight: 500;">
+                                    I understand that I am responsible for canceling my subscription if I no longer wish to be charged.
+                                </label>
+                            </div>
+                            
+                            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                <input type="checkbox" id="auto-cancel-acknowledge" style="margin-top: 3px; width: auto; height: 16px; width: 16px;">
+                                <label for="auto-cancel-acknowledge" style="font-size: 14px; color: #333; font-weight: 500;">
+                                    I understand that my membership will NOT automatically cancel at the end of a course, exam, or semester.
+                                </label>
+                            </div>
+                            
+                            <div id="checkbox-error" style="color: var(--primary); font-size: 13px; margin-top: 10px; font-weight: 500; display: none;">
+                                Both acknowledgments are required to proceed with payment
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a> |
+            <a href="#">Terms</a> |
+            <a href="#">Help</a> |
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+</body>
+</html>

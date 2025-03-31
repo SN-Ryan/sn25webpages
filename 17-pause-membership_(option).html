@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pause Membership | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+            --success: #2e7d32;
+            --success-light: #e8f5e9;
+            --warning: #f57c00;
+            --warning-light: #fff8e1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 700px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .pause-info {
+            background-color: var(--warning-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-icon {
+            font-size: 24px;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .pause-status {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .status-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .status-value {
+            font-weight: 600;
+        }
+        
+        .pause-duration {
+            margin-bottom: 25px;
+        }
+        
+        .duration-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .duration-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .duration-option {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .duration-option:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .duration-option.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .duration-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: var(--border);
+            background-color: #f5f5f5;
+        }
+        
+        .duration-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .duration-text {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .terms-toggle {
+            margin-bottom: 25px;
+        }
+        
+        .toggle-button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .terms-content {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            display: none;
+        }
+        
+        .terms-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .terms-content li {
+            margin-bottom: 5px;
+        }
+        
+        .resume-date {
+            background-color: var(--success-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .resume-icon {
+            font-size: 24px;
+            color: var(--success);
+        }
+        
+        .resume-info {
+            flex: 1;
+        }
+        
+        .resume-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .password-verification {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .password-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-bg);
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-top: auto;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .content {
+                max-width: 100%;
+            }
+            
+            .duration-options {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#" class="active">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Account Settings</h2>
+                <ul>
+                    <li><a href="member-profile.html">Profile</a></li>
+                    <li><a href="billing.html">Billing</a></li>
+                    <li><a href="subscriptions.html" class="active">Subscription</a></li>
+                    <li><a href="change-password.html">Change Password</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>Pause Your Membership</h1>
+                <p class="subtitle">Need a break? Pause your membership temporarily and resume when you're ready.</p>
+                
+                <div class="pause-info">
+                    <div class="info-header">
+                        <span class="info-icon">📝</span>
+                        <span class="info-title">About Pausing</span>
+                    </div>
+                    <p>Pausing your membership temporarily stops your billing and access to study materials. Your account will be preserved, and your subscription will automatically resume after the selected pause period.</p>
+                    <button class="toggle-button" id="terms-toggle">View full pause terms</button>
+                    <div class="terms-content" id="terms-content">
+                        <p>By pausing your membership, you agree to the following terms:</p>
+                        <ul>
+                            <li>Your membership will be paused for the selected duration (1-3 months).</li>
+                            <li>You won't be billed during the pause period.</li>
+                            <li>You won't have access to study materials during the pause.</li>
+                            <li>Your subscription will automatically resume at the end of the pause period.</li>
+                            <li>You can only pause your membership once every 6 months.</li>
+                            <li>Maximum pause duration is based on your account age (half your active months, up to 3 months).</li>
+                            <li>You'll receive an email notification 7 days before your membership resumes.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="pause-status">
+                    <div class="status-row">
+                        <div class="status-label">Current Plan:</div>
+                        <div class="status-value">2 Course Plan ($75.00/month)</div>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-label">Account Age:</div>
+                        <div class="status-value">7 months</div>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-label">Max Pause Duration:</div>
+                        <div class="status-value">3 months</div>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-label">Last Paused:</div>
+                        <div class="status-value">Never</div>
+                    </div>
+                </div>
+                
+                <form id="pause-form">
+                    <div class="pause-duration">
+                        <div class="duration-title">Select Pause Duration</div>
+                        <div class="duration-options">
+                            <div class="duration-option" data-value="1">
+                                <div class="duration-value">1</div>
+                                <div class="duration-text">Month</div>
+                            </div>
+                            <div class="duration-option" data-value="2">
+                                <div class="duration-value">2</div>
+                                <div class="duration-text">Months</div>
+                            </div>
+                            <div class="duration-option" data-value="3">
+                                <div class="duration-value">3</div>
+                                <div class="duration-text">Months</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-date">
+                        <div class="resume-icon">📅</div>
+                        <div class="resume-info">
+                            <div class="resume-title">Your membership will resume on:</div>
+                            <div class="resume-date-value" id="resume-date">Select a pause duration</div>
+                        </div>
+                    </div>
+                    
+                    <div class="password-verification">
+                        <div class="password-title">Verify Your Password</div>
+                        <p>Please enter your password to confirm this change.</p>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Pause Membership</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle terms content
+            const termsToggle = document.getElementById('terms-toggle');
+            const termsContent = document.getElementById('terms-content');
+            
+            termsToggle.addEventListener('click', function() {
+                if (termsContent.style.display === 'block') {
+                    termsContent.style.display = 'none';
+                    termsToggle.textContent = 'View full pause terms';
+                } else {
+                    termsContent.style.display = 'block';
+                    termsToggle.textContent = 'Hide pause terms';
+                }
+            });
+            
+            // Duration option selection
+            const durationOptions = document.querySelectorAll('.duration-option');
+            const resumeDateElement = document.getElementById('resume-date');
+            
+            durationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        // Remove selected class from all options
+                        durationOptions.forEach(opt => opt.classList.remove('selected'));
+                        
+                        // Add selected class to clicked option
+                        this.classList.add('selected');
+                        
+                        // Update resume date
+                        const months = parseInt(this.getAttribute('data-value'));
+                        updateResumeDate(months);
+                    }
+                });
+            });
+            
+            // Update resume date based on selected pause duration
+            function updateResumeDate(months) {
+                const currentDate = new Date();
+                currentDate.setMonth(currentDate.getMonth() + months);
+                
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                resumeDateElement.textContent = formatter.format(currentDate);
+            }
+            
+            // Form submission
+            const pauseForm = document.getElementById('pause-form');
+            
+            pauseForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if duration is selected
+                const selectedDuration = document.querySelector('.duration-option.selected');
+                if (!selectedDuration) {
+                    alert('Please select a pause duration.');
+                    return;
+                }
+                
+                // Check if password is entered
+                const password = document.getElementById('password').value;
+                if (!password) {
+                    alert('Please enter your password to confirm this change.');
+                    return;
+                }
+                
+                // Get selected duration
+                const months = parseInt(selectedDuration.getAttribute('data-value'));
+                
+                // Show confirmation
+                if (confirm(`Are you sure you want to pause your membership for ${months} month${months > 1 ? 's' : ''}?`)) {
+                    alert(`Your membership has been paused. It will automatically resume on ${resumeDateElement.textContent}.`);
+                    window.location.href = 'subscriptions.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

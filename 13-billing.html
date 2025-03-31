@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing History | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 800px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .payment-info-section {
+            margin: 20px 0 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .payment-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .payment-info-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .card-section-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        
+        .credit-card-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 25px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .card-details {
+            flex: 1;
+        }
+        
+        .card-number {
+            font-weight: 500;
+        }
+        
+        .card-expiry {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .billing-info-list {
+            list-style: none;
+        }
+        
+        .billing-info-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .billing-info-label {
+            color: #666;
+            margin-right: 5px;
+        }
+        
+        .edit-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .edit-link:hover {
+            text-decoration: underline;
+        }
+        
+        .invoice-section {
+            margin-top: 30px;
+        }
+        
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .invoice-table th,
+        .invoice-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .invoice-table th {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .invoice-table tbody tr:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .invoice-number {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .invoice-number:hover {
+            text-decoration: underline;
+        }
+        
+        .invoice-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-paid {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+        
+        .download-icon {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .download-icon:hover {
+            color: var(--primary);
+        }
+        
+        .pdf-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-link {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-link:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .page-link.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pagination-nav:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .pagination-nav.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#" class="active">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="logout.html">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Account Settings</h2>
+                <ul>
+                    <li><a href="member-profile.html">Profile</a></li>
+                    <li><a href="billing.html" class="active">Billing</a></li>
+                    <li><a href="subscriptions.html">Subscription</a></li>
+                    <li><a href="change-password.html">Change Password</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>Billing History</h1>
+                <p>View and manage your payment methods and invoices.</p>
+                
+                <div class="payment-info-section">
+                    <div class="payment-info-grid">
+                        <div class="payment-info-card">
+                            <div class="card-section-title">Payment Method</div>
+                            <div class="credit-card-info">
+                                <div class="card-icon">Visa</div>
+                                <div class="card-details">
+                                    <div class="card-number">•••• •••• •••• 4587</div>
+                                    <div class="card-expiry">Expires 05/2026</div>
+                                </div>
+                            </div>
+                            <a href="credit-card-change.html" class="edit-link">Update Payment Method</a>
+                        </div>
+                        
+                        <div class="payment-info-card">
+                            <div class="card-section-title">Billing Information</div>
+                            <ul class="billing-info-list">
+                                <li class="billing-info-item">
+                                    <span class="billing-info-label">Name:</span> Julie Gator
+                                </li>
+                                <li class="billing-info-item">
+                                    <span class="billing-info-label">Email:</span> jules.gator@ufl.edu
+                                </li>
+                                <li class="billing-info-item">
+                                    <span class="billing-info-label">Billing Cycle:</span> Monthly
+                                </li>
+                                <li class="billing-info-item">
+                                    <span class="billing-info-label">Next Billing Date:</span> April 15, 2025
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="invoice-section">
+                    <h2>Invoices</h2>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-table-body">
+                            <!-- Invoices will be dynamically populated here -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="pagination" id="pagination-container">
+                        <!-- Pagination will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Invoice data - 40 invoices
+            const invoices = [
+                { id: "SN-INV-2025-03-15", date: "Mar 15, 2025", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2025-02-15", date: "Feb 15, 2025", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2025-01-15", date: "Jan 15, 2025", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-12-15", date: "Dec 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-11-15", date: "Nov 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-10-15", date: "Oct 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-09-15", date: "Sep 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-08-15", date: "Aug 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-07-15", date: "Jul 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-06-15", date: "Jun 15, 2024", amount: "$75.00", status: "Paid" },
+                { id: "SN-INV-2024-05-15", date: "May 15, 2024", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2024-04-15", date: "Apr 15, 2024", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2024-03-15", date: "Mar 15, 2024", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2024-02-15", date: "Feb 15, 2024", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2024-01-15", date: "Jan 15, 2024", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-12-15", date: "Dec 15, 2023", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-11-15", date: "Nov 15, 2023", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-10-15", date: "Oct 15, 2023", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-09-15", date: "Sep 15, 2023", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-08-15", date: "Aug 15, 2023", amount: "$60.00", status: "Paid" },
+                { id: "SN-INV-2023-07-15", date: "Jul 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-06-15", date: "Jun 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-05-15", date: "May 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-04-15", date: "Apr 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-03-15", date: "Mar 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-02-15", date: "Feb 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2023-01-15", date: "Jan 15, 2023", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2022-12-15", date: "Dec 15, 2022", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2022-11-15", date: "Nov 15, 2022", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2022-10-15", date: "Oct 15, 2022", amount: "$50.00", status: "Paid" },
+                { id: "SN-INV-2022-09-15", date: "Sep 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-08-15", date: "Aug 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-07-15", date: "Jul 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-06-15", date: "Jun 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-05-15", date: "May 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-04-15", date: "Apr 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-03-15", date: "Mar 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-02-15", date: "Feb 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2022-01-15", date: "Jan 15, 2022", amount: "$45.00", status: "Paid" },
+                { id: "SN-INV-2021-12-15", date: "Dec 15, 2021", amount: "$45.00", status: "Paid" }
+            ];
+            
+            // State variables
+            let currentPage = 1;
+            const invoicesPerPage = 5;
+            const totalPages = Math.ceil(invoices.length / invoicesPerPage);
+            
+            // DOM elements
+            const invoiceTableBody = document.getElementById('invoice-table-body');
+            const paginationContainer = document.getElementById('pagination-container');
+            
+            // Initialize
+            renderInvoices();
+            renderPagination();
+            
+            // Render invoices for current page
+            function renderInvoices() {
+                invoiceTableBody.innerHTML = '';
+                
+                const startIndex = (currentPage - 1) * invoicesPerPage;
+                const endIndex = Math.min(startIndex + invoicesPerPage, invoices.length);
+                const invoicesToShow = invoices.slice(startIndex, endIndex);
+                
+                invoicesToShow.forEach(invoice => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td><a href="#" class="invoice-number">${invoice.id}</a></td>
+                        <td>${invoice.date}</td>
+                        <td>${invoice.amount}</td>
+                        <td><span class="invoice-status status-${invoice.status.toLowerCase()}">${invoice.status}</span></td>
+                        <td>
+                            <a href="#" class="download-icon" title="Download PDF">
+                                <svg class="pdf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <path d="M12 18v-6"></path>
+                                    <path d="M8 15l4 4 4-4"></path>
+                                </svg>
+                            </a>
+                        </td>
+                    `;
+                    
+                    invoiceTableBody.appendChild(row);
+                });
+            }
+            
+            // Render pagination
+            function renderPagination() {
+                paginationContainer.innerHTML = '';
+                
+                // Previous button
+                const prevButton = document.createElement('div');
+                prevButton.className = `pagination-nav${currentPage === 1 ? ' disabled' : ''}`;
+                prevButton.innerHTML = '&lt;';
+                
+                if (currentPage > 1) {
+                    prevButton.addEventListener('click', function() {
+                        currentPage--;
+                        renderInvoices();
+                        renderPagination();
+                    });
+                }
+                
+                paginationContainer.appendChild(prevButton);
+                
+                // Determine pagination range
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                
+                // Adjust start if we're near the end
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+                
+                // First page link if needed
+                if (startPage > 1) {
+                    const firstPageLink = document.createElement('div');
+                    firstPageLink.className = 'page-link';
+                    firstPageLink.textContent = '1';
+                    
+                    firstPageLink.addEventListener('click', function() {
+                        currentPage = 1;
+                        renderInvoices();
+                        renderPagination();
+                    });
+                    
+                    paginationContainer.appendChild(firstPageLink);
+                    
+                    // Ellipsis if needed
+                    if (startPage > 2) {
+                        const ellipsis = document.createElement('div');
+                        ellipsis.className = 'pagination-ellipsis';
+                        ellipsis.textContent = '...';
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                }
+                
+                // Page numbers
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageLink = document.createElement('div');
+                    pageLink.className = `page-link${i === currentPage ? ' active' : ''}`;
+                    pageLink.textContent = i;
+                    
+                    pageLink.addEventListener('click', function() {
+                        if (i !== currentPage) {
+                            currentPage = i;
+                            renderInvoices();
+                            renderPagination();
+                        }
+                    });
+                    
+                    paginationContainer.appendChild(pageLink);
+                }
+                
+                // Last page link if needed
+                if (endPage < totalPages) {
+                    // Ellipsis if needed
+                    if (endPage < totalPages - 1) {
+                        const ellipsis = document.createElement('div');
+                        ellipsis.className = 'pagination-ellipsis';
+                        ellipsis.textContent = '...';
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                    
+                    const lastPageLink = document.createElement('div');
+                    lastPageLink.className = 'page-link';
+                    lastPageLink.textContent = totalPages;
+                    
+                    lastPageLink.addEventListener('click', function() {
+                        currentPage = totalPages;
+                        renderInvoices();
+                        renderPagination();
+                    });
+                    
+                    paginationContainer.appendChild(lastPageLink);
+                }
+                
+                // Next button
+                const nextButton = document.createElement('div');
+                nextButton.className = `pagination-nav${currentPage === totalPages ? ' disabled' : ''}`;
+                nextButton.innerHTML = '&gt;';
+                
+                if (currentPage < totalPages) {
+                    nextButton.addEventListener('click', function() {
+                        currentPage++;
+                        renderInvoices();
+                        renderPagination();
+                    });
+                }
+                
+                paginationContainer.appendChild(nextButton);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Your Profile | Smokin'Notes</title>
+  <style>
+    @font-face {
+      font-family: "Dauphin";
+      src: url("https://fonts.cdnfonts.com/css/dauphin") format("woff2");
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    :root {
+      --primary: #d32f2f;
+      --primary-hover: #b71c1c;
+      --primary-transparent: rgba(211, 47, 47, 0.5);
+      --text: #333;
+      --light-bg: #f9f9f9;
+      --border: #ccc;
+      --text-light: #666;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      background-color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      font-family: 'Dauphin', 'Georgia', serif;
+      font-size: 30px;
+      font-weight: normal;
+      color: var(--primary-transparent);
+      text-decoration: none;
+    }
+    
+    main {
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+      flex: 1;
+    }
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+    
+    .progress {
+      display: flex;
+      margin-bottom: 30px;
+      gap: 15px;
+    }
+    
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background-color: #ccc;
+    }
+    
+    .progress-step.active-step .step-number {
+      background-color: var(--primary);
+    }
+    
+    .step-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    
+    .progress-step.active-step .step-label {
+      font-weight: 500;
+      color: var(--text);
+    }
+    
+    .step-connector {
+      height: 2px;
+      width: 20px;
+      background-color: var(--border);
+      align-self: center;
+    }
+    
+    form {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 15px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+    
+    .form-group {
+      flex: 1;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--light-bg);
+    }
+    
+    footer {
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 15px;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .error-message {
+      color: var(--primary);
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+    
+    input.error, select.error {
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Smokin'Notes</div>
+  </header>
+
+  <main>
+    <div class="progress">
+      <div class="progress-step">
+        <div class="step-number">1</div>
+        <div class="step-label">Sign Up</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="progress-step">
+        <div class="step-number">2</div>
+        <div class="step-label">Verify Email</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="progress-step active-step">
+        <div class="step-number">3</div>
+        <div class="step-label">Complete Profile</div>
+      </div>
+    </div>
+
+    <h1>Complete Your Profile</h1>
+    <p class="subtitle">Tell us a bit about yourself so we can customize your experience</p>
+
+    <form id="profile-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" value="Ry" required />
+          <div class="error-message" id="first-name-error">First name is required</div>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" value="Di" required />
+          <div class="error-message" id="last-name-error">Last name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">UFL.edu Email Address</label>
+        <input type="email" id="email" value="ryan@ufl.edu" disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="alt-email">Contact Email</label>
+        <input type="email" id="alt-email" value="ryandi@me.com" required />
+        <div class="error-message" id="alt-email-error">Valid email is required</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" value="3522563674" required />
+          <div class="error-message" id="phone-error">Phone number is required</div>
+        </div>
+        <div class="form-group">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" value="2000-10-01" required />
+          <div class="error-message" id="dob-error">Date of birth is required</div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="major">Major</label>
+          <select id="major" required>
+            <option selected>Accounting</option>
+            <option>Agricultural and Life Sciences</option>
+            <option>Arts</option>
+            <option>Biology</option>
+            <option>Business Administration</option>
+            <option>Chemistry</option>
+            <option>Computer and Information Sciences</option>
+            <option>Communications & Media</option>
+            <option>Economics</option>
+            <option>Education</option>
+            <option>Engineering</option>
+            <option>Environmental Science/Sustainability</option>
+            <option>Finance</option>
+            <option>Health Sciences</option>
+            <option>Humanities & Social Sciences</option>
+            <option>Marketing</option>
+            <option>Management</option>
+            <option>Mathematics</option>
+            <option>Medicine</option>
+            <option>Nursing</option>
+            <option>Psychology</option>
+            <option>Public Health</option>
+            <option>Undecided</option>
+            <option>Other</option>
+          </select>
+          <div class="error-message" id="major-error">Please select a major</div>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="radio-group" style="display: flex; margin-top: 10px;">
+            <div class="radio-option" style="margin-right: 20px;">
+              <input type="radio" id="male" name="gender" checked style="width: auto; margin-right: 5px;" />
+              <label for="male" style="display: inline; font-weight: normal;">Male</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="female" name="gender" style="width: auto; margin-right: 5px;" />
+              <label for="female" style="display: inline; font-weight: normal;">Female</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" required>
+            <option>c/o '28</option>
+            <option>c/o '27</option>
+            <option>c/o '26</option>
+            <option>c/o '25</option>
+            <option selected>Already Graduated</option>
+          </select>
+          <div class="error-message" id="status-error">Please select your status</div>
+        </div>
+        <div class="form-group">
+          <label for="campus">Campus Type</label>
+          <select id="campus" required>
+            <option>On Campus</option>
+            <option>Off Campus</option>
+            <option selected>UF Online / PaCE</option>
+          </select>
+          <div class="error-message" id="campus-error">Please select your campus type</div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="affiliations">Student Affiliations</label>
+          <input type="text" id="affiliations" placeholder="Optional" />
+        </div>
+        <div class="form-group">
+          <label for="study-style">Preferred Study Style</label>
+          <select id="study-style" required>
+            <option disabled selected>Select your preferred format</option>
+            <option value="concise">Ultra Concise – Just the essentials</option>
+            <option value="balanced">Balanced – Summary + context</option>
+            <option value="detailed">Detailed – Full concepts and depth</option>
+          </select>
+          <div class="error-message" id="study-style-error">Please select a study style</div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-secondary" onclick="window.location.href='/verify-email.html'">Back</button>
+        <button type="submit" class="btn-primary" id="save-profile-btn">Save Profile</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    © 2025 Smokin'Notes Inc. All rights reserved.
+  </footer>
+  
+  <script>
+    document.getElementById('profile-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      
+      // Reset error states
+      const errorElements = document.querySelectorAll('.error-message');
+      errorElements.forEach(el => el.style.display = 'none');
+      
+      const inputElements = document.querySelectorAll('input, select');
+      inputElements.forEach(el => el.classList.remove('error'));
+      
+      // Validate form
+      let isValid = true;
+      
+      const requiredFields = [
+        'first-name', 
+        'last-name', 
+        'alt-email', 
+        'phone', 
+        'dob',
+        'major',
+        'status',
+        'campus',
+        'study-style'
+      ];
+      
+      for (let id of requiredFields) {
+        const field = document.getElementById(id);
+        const errorEl = document.getElementById(`${id}-error`);
+        
+        if (!field.value.trim()) {
+          isValid = false;
+          field.classList.add('error');
+          if (errorEl) errorEl.style.display = 'block';
+        }
+        
+        // Email validation
+        if (id === 'alt-email' && field.value.trim()) {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(field.value.trim())) {
+            isValid = false;
+            field.classList.add('error');
+            if (errorEl) errorEl.style.display = 'block';
+          }
+        }
+      }
+      
+      if (isValid) {
+        // Prepare data for submission
+        const data = {
+          firstName: document.getElementById('first-name').value,
+          lastName: document.getElementById('last-name').value,
+          altEmail: document.getElementById('alt-email').value,
+          phone: document.getElementById('phone').value,
+          dob: document.getElementById('dob').value,
+          major: document.getElementById('major').value,
+          gender: document.getElementById('male').checked ? 'male' : 'female',
+          status: document.getElementById('status').value,
+          campus: document.getElementById('campus').value,
+          affiliations: document.getElementById('affiliations').value,
+          studyStyle: document.getElementById('study-style').value
+        };
+        
+        // Submit data via fetch API
+        fetch('http://localhost:3001/profiles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => {
+          alert('Saved successfully!');
+          window.location.href = '/dashboard.html';
+        })
+        .catch(error => {
+          console.error('Error saving profile:', error);
+          alert('Error saving profile. Please try again.');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

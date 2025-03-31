@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Membership | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+            --warning: #f57c00;
+            --warning-light: #fff8e1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 700px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .alert-box {
+            background-color: var(--warning-light);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--warning);
+        }
+        
+        .subscription-info {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .label {
+            color: #666;
+        }
+        
+        .value {
+            font-weight: 500;
+        }
+        
+        .what-happens {
+            margin-bottom: 30px;
+        }
+        
+        .what-happens h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .what-happens ul {
+            list-style: none;
+            margin-left: 10px;
+        }
+        
+        .what-happens li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .what-happens li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        .reasons-section {
+            margin-bottom: 30px;
+        }
+        
+        .reasons-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .reason-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .reason-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .reason-option input[type="radio"] {
+            margin-top: 3px;
+        }
+        
+        .other-reason {
+            margin-top: 15px;
+        }
+        
+        .other-reason textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            resize: vertical;
+            margin-top: 10px;
+        }
+        
+        .password-verification {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .password-verification h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        .alternative-options {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .alternative-options h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .alternative-options ul {
+            list-style: none;
+        }
+        
+        .alternative-options li {
+            margin-bottom: 15px;
+        }
+        
+        .alternative-options a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .alternative-options a:hover {
+            text-decoration: underline;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-top: auto;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#" class="active">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Account Settings</h2>
+                <ul>
+                    <li><a href="member-profile.html">Profile</a></li>
+                    <li><a href="billing.html">Billing</a></li>
+                    <li><a href="subscriptions.html" class="active">Subscription</a></li>
+                    <li><a href="change-password.html">Change Password</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>Cancel Membership</h1>
+                
+                <div class="alert-box">
+                    <div class="alert-title">Please Read Before Proceeding</div>
+                    <p>We're sorry to see you go! By canceling your membership, you'll IMMEDIATELY lose access to all study materials. This action cannot be undone.</p>
+                </div>
+                
+                <div class="subscription-info">
+                    <div class="info-title">Current Subscription Details</div>
+                    <div class="info-row">
+                        <div class="label">Membership Plan:</div>
+                        <div class="value">2 Course Plan</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="label">Monthly Fee:</div>
+                        <div class="value">$75.00</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="label">Current Period:</div>
+                        <div class="value">March 15, 2025 - April 14, 2025</div>
+                    </div>
+                    <!-- <div class="info-row">
+                        <div class="label">Access Ends On:</div>
+                        <div class="value">April 14, 2025</div>
+                    </div> -->
+                </div>
+                
+                <div class="what-happens">
+                    <h2>What Happens When You Cancel</h2>
+                    <ul>
+                        <li>Your membership will be IMMEDIATELY cancelled and you will lose all access to the study guide materials.</li>
+                        <li>You will not be charged again after cancellation.</li>
+                    </ul>
+                </div>
+		
+		               
+                <form id="cancellation-form">
+                <!--     <div class="reasons-section">
+                        <h2>Please tell us why you're leaving</h2>
+                        <div class="reason-options">
+                            <div class="reason-option">
+                                <input type="radio" id="reason-1" name="cancellation-reason" value="too-expensive">
+                                <label for="reason-1">The membership is too expensive</label>
+                            </div>
+                            <div class="reason-option">
+                                <input type="radio" id="reason-2" name="cancellation-reason" value="semester-ended">
+                                <label for="reason-2">My semester/course has ended</label>
+                            </div>
+                            <div class="reason-option">
+                                <input type="radio" id="reason-3" name="cancellation-reason" value="not-helpful">
+                                <label for="reason-3">The materials weren't helpful enough</label>
+                            </div>
+                            <div class="reason-option">
+                                <input type="radio" id="reason-4" name="cancellation-reason" value="too-busy">
+                                <label for="reason-4">I didn't have time to use the service</label>
+                            </div>
+                            <div class="reason-option">
+                                <input type="radio" id="reason-5" name="cancellation-reason" value="found-alternative">
+                                <label for="reason-5">I found a better alternative</label>
+                            </div>
+                            <div class="reason-option">
+                                <input type="radio" id="reason-6" name="cancellation-reason" value="other">
+                                <label for="reason-6">Other reason</label>
+                            </div>
+                        </div>
+                 
+                        <div class="other-reason" id="other-reason-box" style="display: none;">
+                            <label for="other-reason-text">Please specify:</label>
+                            <textarea id="other-reason-text" placeholder="Tell us more about why you're canceling..."></textarea>
+                        </div>
+                    </div>
+ -->                   
+                    <div class="password-verification">
+                        <h2>Please verify your password to continue</h2>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="alternative-options">
+                        <h2>Alternative Options</h2>
+                        <ul>
+                            <li><a href="switch-plan.html">Switch to a more affordable plan</a> - Downgrade to a 1 Course Plan for only $50/month.</li>
+                            <li><a href="#">Pause your membership</a> - Take a break and resume when you're ready.</li>
+                            <li><a href="#">Contact support</a> - We're here to help if you're having issues.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Go Back</button>
+                        <button type="submit" class="btn btn-danger">Cancel My Membership</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide other reason text area
+            const reasonOptions = document.querySelectorAll('input[name="cancellation-reason"]');
+            const otherReasonBox = document.getElementById('other-reason-box');
+            
+            reasonOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.value === 'other') {
+                        otherReasonBox.style.display = 'block';
+                    } else {
+                        otherReasonBox.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Form submission
+            const cancellationForm = document.getElementById('cancellation-form');
+            
+            cancellationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get selected reason
+                let selectedReason = '';
+                reasonOptions.forEach(option => {
+                    if (option.checked) {
+                        selectedReason = option.value;
+                    }
+                });
+                
+                // Get password
+                const password = document.getElementById('password').value;
+                
+                // Validation
+                if (!selectedReason) {
+                    alert('Please select a reason for cancellation.');
+                    return;
+                }
+                
+                if (selectedReason === 'other' && !document.getElementById('other-reason-text').value) {
+                    alert('Please provide details for your cancellation reason.');
+                    return;
+                }
+                
+                if (!password) {
+                    alert('Please enter your password to confirm cancellation.');
+                    return;
+                }
+                
+                // Confirmation dialog
+                if (confirm('Are you sure you want to cancel your membership? You will continue to have access until April 14, 2025.')) {
+                    // Show confirmation message
+                    alert('Your membership has been cancelled. You will continue to have access until the end of your current billing period (April 14, 2025).');
+                    
+                    // Redirect to main page or login page
+                    window.location.href = 'subscriptions.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

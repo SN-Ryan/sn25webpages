@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started | Smokin'Notes</title>
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-hover: #b71c1c;
+      --text: #333;
+      --light-bg: #f8f9fa;
+      --border: #e0e0e0;
+      --dark-bg: #121212;
+      --dark-text: #f2f2f2;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease;
+    }
+
+    body.dark .container {
+      background: #1e1e1e;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Georgia', serif;
+      font-size: 32px;
+      font-style: italic;
+      font-weight: normal;
+      margin-bottom: 16px;
+      color: var(--primary);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .form-container {
+      padding: 0 30px 30px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      position: relative;
+      display: flex;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 40px 16px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px 0 0 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    #email-status {
+      position: absolute;
+      right: 100px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      transition: color 0.3s ease;
+      pointer-events: none;
+    }
+
+    .valid-icon::before {
+      content: '\2714'; /* checkmark */
+      color: #2e7d32;
+    }
+
+    .invalid-icon::before {
+      content: '\26A0'; /* warning sign */
+      color: #d32f2f;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0 24px;
+      border-radius: 0 8px 8px 0;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .benefit-icon {
+      width: 24px;
+      height: 24px;
+      background-color: rgba(211, 47, 47, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .terms {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .terms a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .dark-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</div>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Smokin'Notes</div>
+      <h1>Get started for free</h1>
+      <p class="subtitle">Join over 100,000 UF students who've boosted their GPA with our study guides!</p>
+    </div>
+    <div class="form-container">
+      <div class="form-group">
+        <form id="signup-form">
+          <div class="input-group">
+            <input type="email" id="email" placeholder="Enter your UFL.edu email" required>
+            <span id="email-status"></span>
+            <button type="submit">Start</button>
+          </div>
+        </form>
+      </div>
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">✓</div>
+          <div>Full access to all features for 7 days</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">✓</div>
+          <div>Cancel anytime</div>
+        </div>
+      </div>
+      <p class="terms">
+        By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+  <script>
+    const emailInput = document.getElementById('email');
+    const emailStatus = document.getElementById('email-status');
+
+    function validateUFL(email) {
+      return /@ufl\.edu$/i.test(email);
+    }
+
+    emailInput.addEventListener('input', () => {
+      const value = emailInput.value.trim();
+      if (value === '') {
+        emailStatus.className = '';
+      } else if (validateUFL(value)) {
+        emailStatus.className = 'valid-icon';
+      } else {
+        emailStatus.className = 'invalid-icon';
+      }
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!validateUFL(email)) {
+        alert('Please enter a valid @ufl.edu email address.');
+        return;
+      }
+      alert('Signup successful. Please check your email to verify your account.');
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>

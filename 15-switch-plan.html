@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Plan | Smokin'Notes</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-hover: #b71c1c;
+            --primary-light: #ffebee;
+            --secondary: #2e7d32;
+            --secondary-hover: #1b5e20;
+            --secondary-light: #e8f5e9;
+            --text: #333;
+            --light-bg: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: normal;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-left: 40px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+        
+        .members-count {
+            color: #666;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            margin-right: 40px;
+        }
+        
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-menu h2 {
+            font-size: 18px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            max-width: 800px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .current-plan {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+        }
+        
+        .current-plan-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .plan-details {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .plan-info {
+            flex: 1;
+        }
+        
+        .plan-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .plan-price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .plan-period {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .plan-features li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .feature-icon {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .billing-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        .plans-section {
+            margin-top: 40px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .plan-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .plan-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .plan-card.current {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+        }
+        
+        .current-badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background-color: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .plan-card .plan-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .plan-card .plan-price {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .plan-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .plan-features-compact {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .plan-features-compact li {
+            margin-bottom: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .plan-selected {
+            border: 2px solid var(--secondary);
+            background-color: var(--secondary-light);
+        }
+        
+        .plan-selected .current-badge {
+            background-color: var(--secondary);
+        }
+        
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+        }
+        
+        .confirm-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .summary-box {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .summary-row.total {
+            font-weight: 600;
+            font-size: 16px;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .summary-row.immediate-payment {
+            color: var(--primary);
+            font-weight: 600;
+            background-color: var(--primary-light);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .warning-message {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .verification-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+        }
+        
+        .verification-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group.half {
+            flex: 1;
+        }
+        
+        .card-icons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 25px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-bg);
+        }
+        
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-top: auto;
+        }
+        
+        footer a {
+            margin-left: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Smokin'Notes</a>
+        <nav>
+            <a href="#">My Classes</a>
+            <a href="#">Study Guides</a>
+            <a href="#" class="active">Account</a>
+            <a href="#">Help</a>
+        </nav>
+        <div class="user-area">
+            <span>Hello, Ry D.</span>
+            <span class="members-count">848 Members Online</span>
+            <span>|</span>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Account Settings</h2>
+                <ul>
+                    <li><a href="member-profile.html">Profile</a></li>
+                    <li><a href="billing.html">Billing</a></li>
+                    <li><a href="subscriptions.html" class="active">Subscription</a></li>
+                    <li><a href="change-password.html">Change Password</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="content-card">
+                <h1>Switch Membership Plan</h1>
+                <p class="page-subtitle">Select the plan that best meets your academic needs. Your new plan will take effect at the start of your next billing cycle.</p>
+                
+                <div class="current-plan">
+                    <div class="current-plan-label">Your Current Plan</div>
+                    <div class="plan-details">
+                        <div class="plan-info">
+                            <div class="plan-title">2 Course Plan</div>
+                            <div class="plan-price">$75<span class="plan-period">/month</span></div>
+                            
+                            <ul class="plan-features">
+                                <li><span class="feature-icon">✓</span> Access to 2 courses at a time</li>
+                                <li><span class="feature-icon">✓</span> Study guides, practice exams, and tutorial videos</li>
+                                <li><span class="feature-icon">✓</span> Materials updated weekly</li>
+                            </ul>
+                            
+                            <div class="billing-info">
+                                Next billing date: April 15, 2025
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plans-section">
+                    <div class="section-title">Available Plans</div>
+                    <form id="plan-switch-form">
+                        <div class="plans-grid">
+                            <div class="plan-card">
+                                <div class="plan-title">1 Course Plan</div>
+                                <div class="plan-price">$50<span class="plan-period">/month</span></div>
+                                <div class="plan-desc">For your single toughest course.</div>
+                                
+                                <ul class="plan-features-compact">
+                                    <li><span class="feature-icon">✓</span> Access to 1 course</li>
+                                    <li><span class="feature-icon">✓</span> Full study materials</li>
+                                    <li><span class="feature-icon">✓</span> Weekly updates</li>
+                                </ul>
+                                
+                                <div style="text-align: center;">
+                                    <input type="radio" id="plan-1" name="selected-plan" value="1-course">
+                                    <label for="plan-1">Select Plan</label>
+                                </div>
+                            </div>
+                            
+                            <div class="plan-card current">
+                                <div class="current-badge">Current</div>
+                                <div class="plan-title">2 Course Plan</div>
+                                <div class="plan-price">$75<span class="plan-period">/month</span></div>
+                                <div class="plan-desc">For your two toughest courses.</div>
+                                
+                                <ul class="plan-features-compact">
+                                    <li><span class="feature-icon">✓</span> Access to 2 courses</li>
+                                    <li><span class="feature-icon">✓</span> Full study materials</li>
+                                    <li><span class="feature-icon">✓</span> Weekly updates</li>
+                                </ul>
+                                
+                                <div style="text-align: center;">
+                                    <input type="radio" id="plan-2" name="selected-plan" value="2-course" checked>
+                                    <label for="plan-2">Select Plan</label>
+                                </div>
+                            </div>
+                            
+                            <div class="plan-card">
+                                <div class="plan-title">3 Course Plan</div>
+                                <div class="plan-price">$100<span class="plan-period">/month</span></div>
+                                <div class="plan-desc">For your three key courses.</div>
+                                
+                                <ul class="plan-features-compact">
+                                    <li><span class="feature-icon">✓</span> Access to 3 courses</li>
+                                    <li><span class="feature-icon">✓</span> Full study materials</li>
+                                    <li><span class="feature-icon">✓</span> Weekly updates</li>
+                                </ul>
+                                
+                                <div style="text-align: center;">
+                                    <input type="radio" id="plan-3" name="selected-plan" value="3-course">
+                                    <label for="plan-3">Select Plan</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="confirm-section">
+                            <div class="section-title">Confirm Your Selection</div>
+                            
+                            <div id="plan-summary" class="summary-box">
+                                <div class="summary-title">Change Summary</div>
+                                <div class="summary-row">
+                                    <div>Current Plan:</div>
+                                    <div>2 Course Plan ($75.00/month)</div>
+                                </div>
+                                <div class="summary-row">
+                                    <div>New Plan:</div>
+                                    <div>2 Course Plan ($75.00/month)</div>
+                                </div>
+                                <div class="summary-row">
+                                    <div>Change Effective Date:</div>
+                                    <div>April 15, 2025</div>
+                                </div>
+                                <div class="summary-row total">
+                                    <div>New Monthly Rate:</div>
+                                    <div>$75.00</div>
+                                </div>
+                                <!-- This row appears only for upgrades -->
+                                <div id="immediate-payment-row" class="summary-row immediate-payment" style="display: none;">
+                                    <div>Immediate Payment Due:</div>
+                                    <div>$25.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="warning-message">
+                                <strong>Important:</strong> If you switch to a plan with fewer courses than you currently have access to, you'll need to remove courses from your account. You'll be prompted to select which courses to keep after confirming this change.
+                            </div>
+                            
+                            <!-- Password verification section -->
+                            <div class="verification-section">
+                                <div class="verification-title">Password Verification</div>
+                                <p>For security, please verify your password to confirm this change.</p>
+                                <div class="form-group">
+                                    <label for="password">Your Password</label>
+                                    <input type="password" id="password" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Credit card verification section (hidden by default, shown for upgrades) -->
+                            <div id="payment-verification" class="verification-section" style="display: none;">
+                                <div class="verification-title">Payment Method Verification</div>
+                                <p>For plan upgrades, please confirm your payment details.</p>
+                                
+                                <div class="card-icons">
+                                    <div class="card-icon">Visa</div>
+                                    <div class="card-icon">MC</div>
+                                    <div class="card-icon">Amex</div>
+                                    <div class="card-icon">Disc</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="card-number">Card Number</label>
+                                    <input type="text" id="card-number" placeholder="•••• •••• •••• 4587" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="expiry">Expiration Date</label>
+                                        <input type="text" id="expiry" placeholder="MM/YY" required>
+                                    </div>
+                                    <div class="form-group half">
+                                        <label for="cvv">CVV</label>
+                                        <input type="text" id="cvv" placeholder="123" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="zip">Billing Zip Code</label>
+                                    <input type="text" id="zip" placeholder="32611" required>
+                                </div>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Confirm Plan Change</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div>© 2025 Smokin'Notes Inc. All rights reserved.</div>
+        <div>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const planForm = document.getElementById('plan-switch-form');
+            const planOptions = document.querySelectorAll('input[name="selected-plan"]');
+            const planSummary = document.getElementById('plan-summary');
+            const immediatePaymentRow = document.getElementById('immediate-payment-row');
+            const paymentVerification = document.getElementById('payment-verification');
+            
+            // Plan details mapping
+            const planDetails = {
+                '1-course': { name: '1 Course Plan', price: 50.00 },
+                '2-course': { name: '2 Course Plan', price: 75.00 },
+                '3-course': { name: '3 Course Plan', price: 100.00 }
+            };
+            
+            // Current plan
+            const currentPlan = '2-course';
+            const currentPrice = planDetails[currentPlan].price;
+            
+            // Update summary when a different plan is selected
+            planOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    const selectedPlan = this.value;
+                    const selectedDetails = planDetails[selectedPlan];
+                    
+                    // Update the plan card appearance
+                    document.querySelectorAll('.plan-card').forEach(card => {
+                        card.classList.remove('plan-selected');
+                        card.classList.remove('current');
+                    });
+                    
+                    this.closest('.plan-card').classList.add('plan-selected');
+                    
+                    // Only show the "Current" badge on the current plan if it's selected
+                    if (selectedPlan === currentPlan) {
+                        this.closest('.plan-card').classList.add('current');
+                    }
+                    
+                    // Check if this is an upgrade
+                    const isUpgrade = selectedDetails.price > currentPrice;
+                    
+                    // Calculate immediate payment for upgrades
+                    let immediatePay = 0;
+                    if (isUpgrade) {
+                        immediatePay = selectedDetails.price - currentPrice;
+                        immediatePaymentRow.style.display = 'flex';
+                        immediatePaymentRow.querySelector('div:last-child').textContent = '$' + immediatePay.toFixed(2);
+                        
+                        // Show credit card verification for upgrades
+                        paymentVerification.style.display = 'block';
+                    } else {
+                        immediatePaymentRow.style.display = 'none';
+                        paymentVerification.style.display = 'none';
+                    }
+                    
+                    // Update the summary section
+                    const summaryHtml = `
+                        <div class="summary-title">Change Summary</div>
+                        <div class="summary-row">
+                            <div>Current Plan:</div>
+                            <div>${planDetails[currentPlan].name} ($${planDetails[currentPlan].price.toFixed(2)}/month)</div>
+                        </div>
+                        <div class="summary-row">
+                            <div>New Plan:</div>
+                            <div>${selectedDetails.name} ($${selectedDetails.price.toFixed(2)}/month)</div>
+                        </div>
+                        <div class="summary-row">
+                            <div>Change Effective Date:</div>
+                            <div>April 15, 2025</div>
+                        </div>
+                        <div class="summary-row total">
+                            <div>New Monthly Rate:</div>
+                            <div>$${selectedDetails.price.toFixed(2)}</div>
+                        </div>
+                    `;
+                    
+                    // Update summary
+                    const summaryBox = document.getElementById('plan-summary');
+                    summaryBox.innerHTML = summaryHtml;
+                    
+                    // Re-add immediate payment row if it's an upgrade
+                    if (isUpgrade) {
+                        const paymentRow = document.createElement('div');
+                        paymentRow.className = 'summary-row immediate-payment';
+                        paymentRow.innerHTML = `
+                            <div>Immediate Payment Due:</div>
+                            <div>$${immediatePay.toFixed(2)}</div>
+                        `;
+                        summaryBox.appendChild(paymentRow);
+                    }
+                });
+            });
+            
+            // Form submission
+            planForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get selected plan
+                let selectedPlan = '';
+                planOptions.forEach(option => {
+                    if (option.checked) {
+                        selectedPlan = option.value;
+                    }
+                });
+                
+                if (!selectedPlan) {
+                    alert('Please select a plan.');
+                    return;
+                }
+                
+                // Check if password field is filled
+                const password = document.getElementById('password').value;
+                if (!password) {
+                    alert('Please enter your password to confirm this change.');
+                    return;
+                }
+                
+                // Check if credit card info is required and filled (for upgrades)
+                const isUpgrade = planDetails[selectedPlan].price > currentPrice;
+                if (isUpgrade) {
+                    const cardNumber = document.getElementById('card-number').value;
+                    const expiry = document.getElementById('expiry').value;
+                    const cvv = document.getElementById('cvv').value;
+                    const zip = document.getElementById('zip').value;
+                    
+                    if (!cardNumber || !expiry || !cvv || !zip) {
+                        alert('Please complete all payment fields to process your upgrade.');
+                        return;
+                    }
+                }
+                
+                // Show confirmation message
+                const selectedDetails = planDetails[selectedPlan];
+                let confirmMessage = `Your plan will be changed to ${selectedDetails.name} ($${selectedDetails.price.toFixed(2)}/month) effective April 15, 2025.`;
+                
+                if (isUpgrade) {
+                    const immediatePay = selectedDetails.price - currentPrice;
+                    confirmMessage += ` You will be charged $${immediatePay.toFixed(2)} now for the upgrade.`;
+                }
+                
+                alert(confirmMessage);
+                
+                // Redirect to the subscriptions page
+                window.location.href = 'subscriptions.html';
+            });
+        });
+    </script>
+</body>
+</html>
